@@ -1,5 +1,6 @@
 package com.talkit.service;
 
+import com.talkit.configuration.exception.AppException;
 import com.talkit.configuration.jwt.JwtProvider;
 import com.talkit.entity.ProfileImage;
 import com.talkit.entity.Member;
@@ -7,6 +8,7 @@ import com.talkit.dto.SignDto;
 import com.talkit.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,20 +43,13 @@ public class SignServiceImpl implements SignService{
 
     @Override
     public String validatateFromSign(SignDto.LoginRequest loginRequest) {
-        Optional<Member> member = memberRepository.findAllByEmail(loginRequest.getEmail());
+        Member member = memberRepository.findAllByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
 
-//        if (!member.isPresent()) {
-//            log.info("1 ");
-//            return "Invalid";
-//        }
-//        if (!(bCryptPasswordEncoder.matches(loginRequest.getPassword(), member.get().getPassword()))) {
-//            log.info("2");
-//            return "Invalid";
-//        } else {
-//            return JwtProvider.createToken(member.get().getUsername(), secretKey, expireTimeMs);
-//        }
+        bCryptPasswordEncoder.matches(member.getPassword(), loginRequest.getPassword());
 
-        return jwtProvider.createToken(member.get().getUsername());
+
+        return jwtProvider.createToken(member.getUsername());
 
     }
 

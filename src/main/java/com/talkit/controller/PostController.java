@@ -32,8 +32,8 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<PostDto.Response> getPost(@RequestParam int page, @RequestParam int size, @RequestParam Long post_id) {
-        PostDto.Response postResponse = postService.getPost(page, size, post_id);
+    public ResponseEntity<PostDto.Response> getPost(@RequestParam Long postid) {
+        PostDto.Response postResponse = postService.getPost(postid);
         if (postResponse != null) {
             return ResponseEntity.ok(postResponse);
         } else {

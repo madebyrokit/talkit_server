@@ -12,6 +12,8 @@ import com.talkit.repository.MemberRepository;
 import com.talkit.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -63,29 +65,35 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto.GetResponse> getComments(Long postId) {
+    public List<CommentDto.GetResponse> getCommentList(int page, int size, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
 
-        List<Comment> comment = commentRepository.findAllByPostId(postId);
+        PageRequest pageRequest = PageRequest.of(page, size);
+        List<Comment> commentList = commentRepository.getCommentList(pageRequest, post.getId());
 
-        List<CommentDto.GetResponse> a = new ArrayList<>();
 
-        for (Comment comment1 : comment) {
-            CommentDto.GetResponse v = new CommentDto.GetResponse(
-                    postId,
-                    comment1.getId(),
-                    comment1.getMember().getUsername(),
-                    comment1.getContent(),
-                    comment1.getMember().getMbtitype(),
-                    comment1.getMember().getProfile_image().getStoreFileName(),
-                    comment1.getSelectOption(),
-                    likeCommentRepository.countByCommentId(comment1.getId()),
-                    post.getCreatedAt(),
-                    comment1.getCreatedAt());
-            a.add(v);
+        List<CommentDto.GetResponse> getResponseList = new ArrayList<>();
+
+        if (commentList != null ) {
+            for (Comment comment : commentList) {
+                CommentDto.GetResponse getResponse = new CommentDto.GetResponse();
+                getResponse.setPostId(comment.getPost().getId());
+                getResponse.setCommentId(comment.getId());
+                getResponse.setUsername(comment.getMember().getUsername());
+                getResponse.setProfileImage(comment.getMember().getProfile_image().getStoreFileName());
+                getResponse.setMbtiType(comment.getMember().getMbtitype());
+                getResponse.setContent(comment.getContent());
+                getResponse.setOption(comment.getSelectOption());
+                getResponse.setLike(likeCommentRepository.countByCommentId(comment.getId()));
+                getResponse.setCreateAt(comment.getCreatedAt());
+
+                getResponseList.add(getResponse);
+            }
+            return getResponseList;
+        } else {
+            return null;
         }
-        return a;
     }
 
     @Override

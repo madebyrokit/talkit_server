@@ -17,5 +17,5 @@ public interface PostRepositoryCustom {
 
     Post getRamdomPost();
 
-    List<Post> getPostByKeyword(Post post);
+    List<Post> getPostByKeyword(String keyword);
 }

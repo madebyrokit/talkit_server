@@ -51,15 +51,15 @@ public class SecurityConfig {
     // CORS 설정을 분리한 메서드로 작성
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));  // 허용할 출처 설정 (프론트엔드 도메인)
+        configuration.setAllowedOrigins(List.of("http://ec2-43-200-178-68.ap-northeast-2.compute.amazonaws.com", "http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));  // 허용할 HTTP 메서드
-        configuration.setAllowedHeaders(List.of("Content-Type", "authorization"));  // 허용할 헤더
+        configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
         configuration.addExposedHeader("authorization");
         configuration.setAllowCredentials(true);  // 쿠키와 인증 정보를 함께 보내도록 허용
         configuration.setMaxAge(3600L);  // preflight 요청에 대한 캐시 시간 (1시간)
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);  // 모든 경로에 대해 CORS 설정 적용
+        source.registerCorsConfiguration("/**", configuration);
 
         return source;
     }

@@ -23,9 +23,9 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.createComment(createRequest, authentication.getName()));
     }
 
-    @GetMapping("/{postId}")// repair
-    public ResponseEntity<List<CommentDto.GetResponse>> viewCommentList(@PathVariable Long postId) {
-        List<CommentDto.GetResponse> comments = commentService.getComments(postId);
+    @GetMapping("/list")// repair
+    public ResponseEntity<List<CommentDto.GetResponse>> getCommentList(@RequestParam int page, @RequestParam int size, @RequestParam Long postid) {
+        List<CommentDto.GetResponse> comments = commentService.getCommentList(page, size, postid);
         if (comments != null) {
             return ResponseEntity.ok(comments);
         } else {

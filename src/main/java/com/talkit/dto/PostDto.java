@@ -36,20 +36,19 @@ public class PostDto {
         private Long postId;
         private Long memberId;
         private String username;
-        private String mbti;
+        private String mbtiType;
         private String profileImage;
         private String title;
         private String optionA;
         private String optionB;
-        private Date createAtPost;
+        private Date createAt;
         private Long view;
         private Long like;
         private Long countComment;
         private Long countCommentByOptionA;
         private Long countCommentByOptionB;
-        private List<CommentDto.GetResponse> commentList;
-        private CommentDto.getTopCommentA topCommentA;
-        private CommentDto.getTopCommentB topCommentB;
+        private CommentDto.getTopCommentA getTopCommentA;
+        private CommentDto.getTopCommentB getTopCommentB;
     }
 
     @Data

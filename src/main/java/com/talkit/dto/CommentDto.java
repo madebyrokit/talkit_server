@@ -29,17 +29,15 @@ public class CommentDto{
     }
 
     @Data
-    @AllArgsConstructor
     public static class GetResponse {
         private Long postId;
         private Long commentId;
         private String username;
-        private String content;
-        private String mbtiType;
         private String profileImage;
+        private String mbtiType;
+        private String content;
         private String option;
         private Long like;
-        private Date postCreatAt;
         private Date createAt;
     }
 

@@ -95,8 +95,18 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
-    public List<Post> getPostByKeyword(Post post) {
-//
-        return List.of();
+    public List<Post> getPostByKeyword(String keyword) {
+        QPost qPost = QPost.post;
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return null;
+        }
+
+        return jpaQueryFactory
+                .select(qPost)
+                .from(qPost)
+                .where(qPost.title.containsIgnoreCase(keyword))
+                .orderBy(qPost.id.desc())
+                .fetch();
     }
 }

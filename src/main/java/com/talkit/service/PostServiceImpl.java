@@ -157,17 +157,13 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
-    public PostDto.Response getPost(int page, int size, Long postId) {
+    public PostDto.Response getPost(Long postId) {
         Optional<Post> optionalPost = postRepository.findById(postId);
 
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
             post.incrementView();
             postRepository.save(post);
-
-            PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Order.desc("id")));
-            List<Comment> comments = commentRepository.getCommentList(pageRequest, post.getId());
-            List<CommentDto.GetResponse> getResponse = new ArrayList<>();
 
             Comment getTopCommentA = commentRepository.findTopCommentA(optionalPost.get().getId());
             CommentDto.getTopCommentA getTopCommentADto;
@@ -189,39 +185,24 @@ public class PostServiceImpl implements PostService{
             }
 
             Comment getTopCommentB = commentRepository.findTopCommentB(optionalPost.get().getId());
-            CommentDto.getTopCommentB getTopCommentADtoB;
+            CommentDto.getTopCommentB getTopCommentBDto;
             if (getTopCommentB != null) {
 
-                getTopCommentADtoB = new CommentDto.getTopCommentB();
-                getTopCommentADtoB.setCommentId(getTopCommentB.getId());
-                getTopCommentADtoB.setUsername(getTopCommentB.getMember().getUsername());
-                getTopCommentADtoB.setMbtiType(getTopCommentB.getMember().getMbtitype());
-                getTopCommentADtoB.setProfileImage(getTopCommentB.getMember().getProfile_image().getStoreFileName());
-                getTopCommentADtoB.setComment(getTopCommentB.getContent());
-                getTopCommentADtoB.setSelectedOption(getTopCommentB.getSelectOption());
-                getTopCommentADtoB.setCountLikeComment(likeCommentRepository.countByCommentId(getTopCommentB.getId()));
-                getTopCommentADtoB.setCreateAtPost(getTopCommentB.getPost().getCreatedAt());
-                getTopCommentADtoB.setCreateAtComment(getTopCommentB.getCreatedAt());
+                getTopCommentBDto = new CommentDto.getTopCommentB();
+                getTopCommentBDto.setCommentId(getTopCommentB.getId());
+                getTopCommentBDto.setUsername(getTopCommentB.getMember().getUsername());
+                getTopCommentBDto.setMbtiType(getTopCommentB.getMember().getMbtitype());
+                getTopCommentBDto.setProfileImage(getTopCommentB.getMember().getProfile_image().getStoreFileName());
+                getTopCommentBDto.setComment(getTopCommentB.getContent());
+                getTopCommentBDto.setSelectedOption(getTopCommentB.getSelectOption());
+                getTopCommentBDto.setCountLikeComment(likeCommentRepository.countByCommentId(getTopCommentB.getId()));
+                getTopCommentBDto.setCreateAtPost(getTopCommentB.getPost().getCreatedAt());
+                getTopCommentBDto.setCreateAtComment(getTopCommentB.getCreatedAt());
 
             } else {
-                getTopCommentADtoB = null;
+                getTopCommentBDto = null;
             }
 
-
-            for (Comment comment : comments) {
-                getResponse.add(new CommentDto.GetResponse(
-                        post.getId(),
-                        comment.getId(),
-                        comment.getMember().getUsername(),
-                        comment.getContent(),
-                        comment.getMember().getMbtitype(),
-                        comment.getMember().getProfile_image().getStoreFileName(),
-                        comment.getSelectOption(),
-                        likeCommentRepository.countByCommentId(comment.getId()),
-                        post.getCreatedAt(),
-                        comment.getCreatedAt()
-                        ));
-            }
 
             return new PostDto.Response(
                     post.getId(),
@@ -238,9 +219,8 @@ public class PostServiceImpl implements PostService{
                     commentRepository.countByPostId(post.getId()),
                     commentRepository.countByPostIdAndSelectOption(post.getId(), "A"),
                     commentRepository.countByPostIdAndSelectOption(post.getId(), "B"),
-                    getResponse,
                     getTopCommentADto,
-                    getTopCommentADtoB);
+                    getTopCommentBDto);
         } else {
             return null;
         }
@@ -311,5 +291,34 @@ public class PostServiceImpl implements PostService{
         logicResponse.setCountByOptionB(getCommentCountByOptionB);
 
         return logicResponse;
+    }
+
+    @Override
+    public List<PostDto.ListResponse> getPostListByKeyword(String keyword) {
+        List<Post> postList = postRepository.getPostByKeyword(keyword);
+
+        List<PostDto.ListResponse> listResponses = new ArrayList<>();
+
+        if (postList != null) {
+            for (Post post : postList) {
+                PostDto.ListResponse response = new PostDto.ListResponse(
+                        post.getId(),
+                        post.getMember().getId(),
+                        post.getMember().getUsername(),
+                        post.getMember().getMbtitype(),
+                        post.getMember().getProfile_image().getStoreFileName(),
+                        post.getTitle(),
+                        post.getOptionA(),
+                        post.getOptionB(),
+                        commentRepository.countByPostId(post.getId()),
+                        post.getCreatedAt(),
+                        post.getView(),
+                        likePostRepository.countByPostId(post.getId())
+                );
+                listResponses.add(response);
+            }
+            return listResponses;
+        }
+        return null;
     }
 }

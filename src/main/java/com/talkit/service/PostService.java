@@ -12,9 +12,11 @@ import java.util.List;
 public interface PostService {
     PostDto.CreateResponse createPost(PostDto.CreateRequest createRequest, String username);
     List<PostDto.ListResponse> getPostList(int page, int size, String sort);
-    PostDto.Response getPost(int page, int size, Long postId);
+    PostDto.Response getPost(Long postId);
     void updatePost(PostDto.UpdateRequest updatePostRequest, String username);
     void deletePost(PostDto.DeleteRequest deletePostRequest, String username);
     Long toggleToLikePost(PostDto.LikePostRequest likePostRequest, String username);
     PostDto.logicResponse barchart();
+
+    List<PostDto.ListResponse> getPostListByKeyword(String keyword);
 }

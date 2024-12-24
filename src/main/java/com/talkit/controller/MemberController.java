@@ -1,6 +1,7 @@
 package com.talkit.controller;
 
 
+import com.talkit.dto.MemberDto;
 import com.talkit.service.FileService;
 import com.talkit.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ public class MemberController {
 
     @PostMapping("/profileimage")
     public ResponseEntity<?> UploadProfileImage(@RequestParam("file") MultipartFile multipartFile, Authentication authentication) {
+        log.info(multipartFile.getName());
+        log.info(authentication.getName());
         fileService.upload(authentication.getName(), multipartFile);
         return ResponseEntity.ok().body("UPLOADED");
     }
@@ -35,7 +38,7 @@ public class MemberController {
     @GetMapping("/{filename}")
     public ResponseEntity<UrlResource> serveProfileImage(@PathVariable String filename) {
         try {
-            Path filePath = Paths.get("/Users/mac/Documents/file").resolve(filename).normalize();
+            Path filePath = Paths.get("/home/ubuntu/file").resolve(filename).normalize();
             UrlResource resource = new UrlResource(filePath.toUri());
 
             if (!resource.exists()) {
@@ -55,6 +58,18 @@ public class MemberController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<MemberDto.Response> getMemberInfo(Authentication authentication) {
+
+        return ResponseEntity.ok().body(memberService.getMemberInfo(authentication.getName()));
+    }
+
+    @DeleteMapping
+    private ResponseEntity<?> deleteMember(Authentication authentication) {
+        memberService.DeleteMember(authentication.getName());
+        return ResponseEntity.ok().body("");
     }
 
 }
