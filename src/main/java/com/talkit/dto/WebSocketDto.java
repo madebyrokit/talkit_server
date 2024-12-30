@@ -3,9 +3,6 @@ package com.talkit.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.SplittableRandom;
-
-
 public class WebSocketDto {
     @Data
     public static class Request {

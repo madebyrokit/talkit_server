@@ -34,9 +34,9 @@ public class PostServiceImpl implements PostService{
     private final CommentRepository commentRepository;
 
     @Override
-    public PostDto.CreateResponse createPost(PostDto.CreateRequest createRequest, String username) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+    public PostDto.CreateResponse createPost(PostDto.CreateRequest createRequest, String userEmail) {
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         Post post = new Post(
                 null,
@@ -230,50 +230,44 @@ public class PostServiceImpl implements PostService{
     @Override
     public void updatePost(PostDto.UpdateRequest updatePostRequest, String username) {
         Post post = postRepository.findById(updatePostRequest.getPostId()).orElseThrow(()->
-                new AppException(HttpStatus.NOT_FOUND)
+                new AppException("게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)
         );
         post.setTitle(updatePostRequest.getTitle());
-        post.setOptionA(updatePostRequest.getOptionA());
-        post.setOptionB(updatePostRequest.getOptionB());
+        post.setOptionA(updatePostRequest.getOpinionA());
+        post.setOptionB(updatePostRequest.getOpinionB());
 
         postRepository.save(post);
     }
 
     @Override
-    public void deletePost(PostDto.DeleteRequest deletePostRequest, String username) {
-        Post post = postRepository.findById(deletePostRequest.getPostId())
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+    public void deletePost(Long postId, String username) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new AppException("게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND));
 
         postRepository.delete(post);
     }
 
     @Override
-    public Long toggleToLikePost(PostDto.LikePostRequest likePostRequest, String username) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+    public Long toggleToLikePost(PostDto.LikePostRequest likePostRequest, String userEmail) {
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new AppException("맴버가 존재하지 않습니다.", HttpStatus.NOT_FOUND));
 
         Post post = postRepository.findById(likePostRequest.getPostId())
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException("게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
-        // 해당 member가 이미 해당 post에 좋아요를 눌렀는지 확인
         Optional<LikePost> optionalLikePost = likePostRepository.findByMember_IdAndPostId(member.getId(), post.getId());
 
         if (optionalLikePost.isPresent()) {
-            // 좋아요가 이미 있다면 삭제
             likePostRepository.delete(optionalLikePost.get());
-            log.info("좋아요 삭제");
             return likePostRepository.countByPostId(post.getId());
         } else {
-            // 좋아요가 없다면 저장
             LikePost likePost1 = new LikePost(post, member);
             likePostRepository.save(likePost1);
             post.getLikePost().add(likePost1);
             postRepository.save(post);
-            log.info("좋아요 저장");
             return likePostRepository.countByPostId(post.getId());
         }
     }
-
 
     @Override
     public PostDto.logicResponse barchart() {
@@ -293,32 +287,4 @@ public class PostServiceImpl implements PostService{
         return logicResponse;
     }
 
-    @Override
-    public List<PostDto.ListResponse> getPostListByKeyword(String keyword) {
-        List<Post> postList = postRepository.getPostByKeyword(keyword);
-
-        List<PostDto.ListResponse> listResponses = new ArrayList<>();
-
-        if (postList != null) {
-            for (Post post : postList) {
-                PostDto.ListResponse response = new PostDto.ListResponse(
-                        post.getId(),
-                        post.getMember().getId(),
-                        post.getMember().getUsername(),
-                        post.getMember().getMbtitype(),
-                        post.getMember().getProfile_image().getStoreFileName(),
-                        post.getTitle(),
-                        post.getOptionA(),
-                        post.getOptionB(),
-                        commentRepository.countByPostId(post.getId()),
-                        post.getCreatedAt(),
-                        post.getView(),
-                        likePostRepository.countByPostId(post.getId())
-                );
-                listResponses.add(response);
-            }
-            return listResponses;
-        }
-        return null;
-    }
 }

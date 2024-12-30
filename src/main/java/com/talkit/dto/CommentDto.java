@@ -1,10 +1,7 @@
 package com.talkit.dto;
 
 import lombok.*;
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.Date;
-import java.util.List;
 
 public class CommentDto{
     @Data
@@ -48,9 +45,9 @@ public class CommentDto{
 
     @Data
     public static class UpdateRequest {
-        private Long postId;
+        private Long commentId;
         private String content;
-        private String option;
+        private String selectedOpinion;
     }
 
     @Data

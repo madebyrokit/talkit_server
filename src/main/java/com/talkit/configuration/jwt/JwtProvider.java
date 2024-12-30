@@ -21,27 +21,27 @@ public class JwtProvider {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
-    public String createToken(String username) {
+    public String createToken(String userEmail) {
         long expireTimeMs = 1000 * 60 * 180L;
 
         return Jwts.builder()
-                .subject(username)
+                .subject(userEmail)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expireTimeMs))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String getMemberFromJwt(String jwt) {
+    public String getUserEmail(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
-                .parseSignedClaims(jwt)
+                .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
     }
+
     public boolean validateJwt(String token) {
-        log.info("dsad{}", token);
         try {
             Jwts.parser().verifyWith(secretKey)
                     .build()

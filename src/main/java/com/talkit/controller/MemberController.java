@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -38,7 +39,7 @@ public class MemberController {
     @GetMapping("/{filename}")
     public ResponseEntity<UrlResource> serveProfileImage(@PathVariable String filename) {
         try {
-            Path filePath = Paths.get("/home/ubuntu/file").resolve(filename).normalize();
+            Path filePath = Paths.get("/Users/mac/Documents/file/").resolve(filename).normalize();
             UrlResource resource = new UrlResource(filePath.toUri());
 
             if (!resource.exists()) {
@@ -62,14 +63,37 @@ public class MemberController {
 
     @GetMapping("/info")
     public ResponseEntity<MemberDto.Response> getMemberInfo(Authentication authentication) {
-
+log.info("컨트롤러 {}",authentication.getName());
         return ResponseEntity.ok().body(memberService.getMemberInfo(authentication.getName()));
     }
 
     @DeleteMapping
-    private ResponseEntity<?> deleteMember(Authentication authentication) {
-        memberService.DeleteMember(authentication.getName());
-        return ResponseEntity.ok().body("");
+    public ResponseEntity<?> deleteMember(Authentication authentication) {
+        memberService.deleteMember(authentication.getName());
+        return ResponseEntity.ok().body("member is deleted");
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateMember(@RequestBody MemberDto.Request request, Authentication authentication) {
+        memberService.updateMember(request, authentication.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<List<MemberDto.ResponsePostList>> getPostListByMember(Authentication authentication) {
+        return ResponseEntity.ok().body(memberService.getPostListByMember(authentication.getName()));
+    }
+    @GetMapping("/comments")
+    public ResponseEntity<List<MemberDto.ResponseCommentList>> getCommentListByMember(Authentication authentication) {
+        return ResponseEntity.ok().body(memberService.getCommentListByMember(authentication.getName()));
+    }
+    @GetMapping("/posts/liked")
+    public ResponseEntity<List<MemberDto.ResponseLikedPostList>> getLikedPostListByMember(Authentication authentication) {
+        return ResponseEntity.ok().body(memberService.getLikedPostListByMember(authentication.getName()));
+    }
+    @GetMapping("/comments/liked")
+    public ResponseEntity<List<MemberDto.ResponseLikedCommentList>> getCLikedCommentPostListByMember(Authentication authentication) {
+        return ResponseEntity.ok().body(memberService.getLikedCommentListByMember(authentication.getName()));
     }
 
 }

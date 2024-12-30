@@ -10,13 +10,11 @@ import java.util.List;
 
 @Service
 public interface PostService {
-    PostDto.CreateResponse createPost(PostDto.CreateRequest createRequest, String username);
+    PostDto.CreateResponse createPost(PostDto.CreateRequest createRequest, String userEmail);
     List<PostDto.ListResponse> getPostList(int page, int size, String sort);
     PostDto.Response getPost(Long postId);
-    void updatePost(PostDto.UpdateRequest updatePostRequest, String username);
-    void deletePost(PostDto.DeleteRequest deletePostRequest, String username);
-    Long toggleToLikePost(PostDto.LikePostRequest likePostRequest, String username);
+    void updatePost(PostDto.UpdateRequest updatePostRequest, String userEmail);
+    void deletePost(Long postId, String userEmail);
+    Long toggleToLikePost(PostDto.LikePostRequest likePostRequest, String userEmail);
     PostDto.logicResponse barchart();
-
-    List<PostDto.ListResponse> getPostListByKeyword(String keyword);
 }

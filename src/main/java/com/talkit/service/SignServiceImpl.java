@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -23,35 +22,44 @@ public class SignServiceImpl implements SignService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
-    private final FileService fileService;
-
 
     @Override
     public void signup(SignDto.SignUpRequest signUpRequest) {
 
-        Member member = new Member();
-        member.setEmail(signUpRequest.getEmail());
-        member.setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
-        member.setMbtitype(signUpRequest.getMbtiType());
-        member.setUsername(signUpRequest.getUsername());
+        Optional<Member> findMember = memberRepository.findByEmail(signUpRequest.getEmail());
+        if (!findMember.isEmpty()) {
+            throw new AppException("이미 존재하는 회원입니다.", HttpStatus.NOT_FOUND);
+        }
 
-        member.setProfile_image(new ProfileImage("user.png", member));
+        if (!signUpRequest.getPassword().isEmpty() && signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
+            Member member = new Member();
+            member.setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
+            member.setEmail(signUpRequest.getEmail());
+            member.setMbtitype(signUpRequest.getMbtiType());
+            member.setUsername(signUpRequest.getUsername());
+            member.setProfile_image(new ProfileImage("user.png", member));
 
-        memberRepository.save(member);
-        log.info("{} registered ", member.getEmail());
+            memberRepository.save(member);
+            log.info("{} registered ", member.getEmail());
+        } else if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
+            throw new AppException("비밀번호가 일치하지 않습니다.", HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
-    public String validatateFromSign(SignDto.LoginRequest loginRequest) {
-        Member member = memberRepository.findAllByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+    public String getSign(SignDto.LoginRequest loginRequest) {
+        Member member = memberRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.NOT_FOUND));
 
-        bCryptPasswordEncoder.matches(member.getPassword(), loginRequest.getPassword());
+        if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
+            log.info("{} password error", member.getEmail());
+            throw new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.NOT_FOUND);
+        }
+        log.info("{} signin", member.getEmail());
 
-
-        return jwtProvider.createToken(member.getUsername());
-
+        return jwtProvider.createToken(member.getEmail());
     }
+
 
 
 }

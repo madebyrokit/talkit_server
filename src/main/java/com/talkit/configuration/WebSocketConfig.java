@@ -22,7 +22,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // "/topic" 경로로 메시지를 브로드캐스트할 수 있도록 설정
         registry.enableSimpleBroker("/topic");  // 메시지 브로커를 통한 메시지 발송
         registry.setApplicationDestinationPrefixes("/app");  // 클라이언트가 보낼 메시지의 목적지 경로 설정
     }

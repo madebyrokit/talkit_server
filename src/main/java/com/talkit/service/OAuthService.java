@@ -1,5 +1,5 @@
 package com.talkit.service;
 
-public interface KakaoService {
+public interface OAuthService {
     String processKakaoCallback(String code);
 }

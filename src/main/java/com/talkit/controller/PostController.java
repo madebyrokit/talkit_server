@@ -47,8 +47,9 @@ public class PostController {
     }
 
     @DeleteMapping
-    public void deletePost(@RequestBody PostDto.DeleteRequest deletePostRequest, Authentication authentication) {
-        postService.deletePost(deletePostRequest, authentication.getName());
+    public ResponseEntity<?> deletePost(@RequestParam Long postid, Authentication authentication) {
+        postService.deletePost(postid, authentication.getName());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/like")

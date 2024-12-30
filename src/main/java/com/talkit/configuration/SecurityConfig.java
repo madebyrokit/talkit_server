@@ -48,11 +48,10 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    // CORS 설정을 분리한 메서드로 작성
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://ec2-43-200-178-68.ap-northeast-2.compute.amazonaws.com", "http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));  // 허용할 HTTP 메서드
+        configuration.setAllowedOrigins(List.of("http://ec2-43-200-178-68.ap-northeast-2.compute.amazonaws.com", "http://localhost:3000", "http://192.168.31.125:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
         configuration.addExposedHeader("authorization");
         configuration.setAllowCredentials(true);  // 쿠키와 인증 정보를 함께 보내도록 허용

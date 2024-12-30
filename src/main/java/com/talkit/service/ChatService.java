@@ -22,7 +22,7 @@ public class ChatService {
         chatRepository.save(chat);
     }
     public List<WebSocketDto.Response> getChatList() {
-        List<Chat> chatList = chatRepository.findTop10Chat();
+        List<Chat> chatList = chatRepository.findTop20Chat();
 
         List<WebSocketDto.Response> responseList = new ArrayList<>();
         for (Chat chat : chatList) {

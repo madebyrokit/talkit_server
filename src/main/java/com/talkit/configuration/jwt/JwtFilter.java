@@ -1,10 +1,8 @@
 package com.talkit.configuration.jwt;
 
-import com.talkit.service.SignService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -37,24 +35,25 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authorization.split(" ")[1];
 
+        String userEmail = jwtProvider.getUserEmail(token);
+
+        log.info("{}", userEmail);
         if (!jwtProvider.validateJwt(token)) {
-            log.error("token is expired");
+            log.error("token of {} is expired", userEmail);
             filterChain.doFilter(request, response);
             return;
         }
 
-        String username = jwtProvider.getMemberFromJwt(token);
-        log.info("username: {}", username);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                username,
+                userEmail,
                 null,
                 List.of(new SimpleGrantedAuthority("USER"))
         );
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.info("filter {}", authentication);
+
         filterChain.doFilter(request, response);
     }
 }

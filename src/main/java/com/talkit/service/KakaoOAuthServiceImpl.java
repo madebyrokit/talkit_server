@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class KakaoServiceImpl implements KakaoService {
+public class KakaoOAuthServiceImpl implements OAuthService {
 
     private final AuthenticationManager authenticationManager;
     private final MemberRepository memberRepository;

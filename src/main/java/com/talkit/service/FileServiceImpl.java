@@ -4,6 +4,7 @@ import com.talkit.entity.Member;
 import com.talkit.configuration.exception.AppException;
 import com.talkit.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileServiceImpl implements FileService{
     private final MemberRepository memberRepository;
 
@@ -25,11 +27,12 @@ public class FileServiceImpl implements FileService{
     }
 
     @Override
-    public void upload(String username, MultipartFile multipartFile) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+    public void upload(String userEmail, MultipartFile multipartFile) {
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         String fileName = storeFile(multipartFile);
+
         member.getProfile_image().setOriginalFileName(multipartFile.getName());
         member.getProfile_image().setStoreFileName(fileName);
         memberRepository.save(member);

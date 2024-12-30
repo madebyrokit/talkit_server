@@ -26,26 +26,18 @@ public class CommentController {
     @GetMapping("/list")// repair
     public ResponseEntity<List<CommentDto.GetResponse>> getCommentList(@RequestParam int page, @RequestParam int size, @RequestParam Long postid) {
         List<CommentDto.GetResponse> comments = commentService.getCommentList(page, size, postid);
-        if (comments != null) {
-            return ResponseEntity.ok(comments);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(comments);
     }
 
     @PutMapping
     public ResponseEntity<?> updateComment(@RequestBody CommentDto.UpdateRequest updateRequest, Authentication authentication) {
         Boolean comments = commentService.updateComment(updateRequest, authentication.getName());
-        if (comments != null) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public void deleteComment(@RequestBody CommentDto.DeleteRequest deleteRequest, Authentication authentication) {
-        commentService.deleteComment(deleteRequest, authentication.getName());
+    public void deleteComment(@RequestParam Long commentid, Authentication authentication) {
+        commentService.deleteComment(commentid, authentication.getName());
     }
 
     @PostMapping("/like")

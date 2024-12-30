@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
 
-    @Query(value = "SELECT * FROM chat ORDER BY id DESC LIMIT 20", nativeQuery = true)
-    List<Chat> findTop10Chat();
+    @Query(value = "SELECT * FROM chat ORDER BY id DESC LIMIT 30", nativeQuery = true)
+    List<Chat> findTop20Chat();
 }

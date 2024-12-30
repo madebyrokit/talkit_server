@@ -6,6 +6,7 @@ import com.talkit.entity.QComment;
 import com.talkit.entity.QLikePost;
 import com.talkit.entity.QPost;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -95,7 +96,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
-    public List<Post> getPostByKeyword(String keyword) {
+    public List<Post> getPostByKeyword(PageRequest pageRequest, String keyword) {
         QPost qPost = QPost.post;
 
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -107,6 +108,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .from(qPost)
                 .where(qPost.title.containsIgnoreCase(keyword))
                 .orderBy(qPost.id.desc())
+                .limit(pageRequest.getPageSize())
+                .offset(pageRequest.getOffset())
                 .fetch();
     }
 }

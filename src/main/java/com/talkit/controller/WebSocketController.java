@@ -27,19 +27,20 @@ public class WebSocketController {
     private final ChatService chatService;
     private Map<String,String> session = new HashMap<>();
 
-    @EventListener
-    public void handleWebSocketConnectListener(SessionConnectEvent event) {
-        StompHeaderAccessor headerAccesor = StompHeaderAccessor.wrap(event.getMessage());
-        String sessionId = headerAccesor.getSessionId();
-        log.info("세션 연결함: {}", sessionId);
-    }
+//    @EventListener
+//    public void handleWebSocketConnectListener(SessionConnectEvent event) {
+//        StompHeaderAccessor headerAccesor = StompHeaderAccessor.wrap(event.getMessage());
+//        String sessionId = headerAccesor.getSessionId();
+//        log.info("세션 연결함: {}", sessionId);
+//    }
+//
+//    @EventListener
+//    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+//        StompHeaderAccessor headerAccesor = StompHeaderAccessor.wrap(event.getMessage());
+//        String sessionId = headerAccesor.getSessionId();
+//        log.info("세션 연결 끊음: {}", sessionId);
+//    }
 
-    @EventListener
-    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-        StompHeaderAccessor headerAccesor = StompHeaderAccessor.wrap(event.getMessage());
-        String sessionId = headerAccesor.getSessionId();
-        log.info("세션 연결 끊음: {}", sessionId);
-    }
     @GetMapping
     public ResponseEntity<List<WebSocketDto.Response>> getChatList() {
         return ResponseEntity.ok().body(chatService.getChatList());

@@ -1,6 +1,7 @@
 package com.talkit.repository;
 
 import com.talkit.entity.Post;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface PostRepositoryCustom {
 
     Post getRamdomPost();
 
-    List<Post> getPostByKeyword(String keyword);
+    List<Post> getPostByKeyword(PageRequest pageRequest, String keyword);
 }

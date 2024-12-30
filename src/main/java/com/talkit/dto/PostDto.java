@@ -3,7 +3,6 @@ package com.talkit.dto;
 import lombok.*;
 
 import java.util.Date;
-import java.util.List;
 
 public class PostDto {
     @Data
@@ -69,16 +68,11 @@ public class PostDto {
     }
 
     @Data
-    public static class DeleteRequest {
-        private Long postId;
-    }
-
-    @Data
     public static class UpdateRequest {
         private Long postId;
         private String title;
-        private String optionA;
-        private String optionB;
+        private String opinionA;
+        private String opinionB;
     }
 
     @Data

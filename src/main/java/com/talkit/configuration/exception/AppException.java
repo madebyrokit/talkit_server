@@ -9,5 +9,6 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @Getter
 public class AppException extends RuntimeException{
+    private String message;
     private HttpStatus httpStatus;
 }

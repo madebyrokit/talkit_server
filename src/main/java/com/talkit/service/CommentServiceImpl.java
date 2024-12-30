@@ -34,12 +34,12 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
 
     @Override
-    public CommentDto.CreateResponse createComment(CommentDto.CreateRequest createRequest, String username) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+    public CommentDto.CreateResponse createComment(CommentDto.CreateRequest createRequest, String userEmail) {
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         Post post = postRepository.findById(createRequest.getPostId())
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException("게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         Comment comment = new Comment(
                 createRequest.getContent(),
@@ -67,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto.GetResponse> getCommentList(int page, int size, Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException("게시글을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
         PageRequest pageRequest = PageRequest.of(page, size);
         List<Comment> commentList = commentRepository.getCommentList(pageRequest, post.getId());
@@ -98,42 +98,39 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Boolean updateComment(CommentDto.UpdateRequest updateCommentRequest, String username) {
-        Comment comment = commentRepository.findById(updateCommentRequest.getPostId())
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+        Comment comment = commentRepository.findById(updateCommentRequest.getCommentId())
+                .orElseThrow(() -> new AppException("댓글을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
         comment.setContent(updateCommentRequest.getContent());
-        comment.setSelectOption(updateCommentRequest.getOption());
+        comment.setSelectOption(updateCommentRequest.getSelectedOpinion());
 
-
+        commentRepository.save(comment);
         return true;
     }
 
     @Override
-    public void deleteComment(CommentDto.DeleteRequest deleteCommentRequest, String username) {
-        Comment comment = commentRepository.findById(deleteCommentRequest.getCommentId())
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+    public void deleteComment(Long commentId, String username) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new AppException("댓글을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
         commentRepository.delete(comment);
     }
 
     @Override
-    public Long toggleLike(Long commentId, String username) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+    public Long toggleLike(Long commentId, String userEmail) {
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new AppException("맴버를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException("댓글을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
-        // 해당 member가 이미 해당 post에 좋아요를 눌렀는지 확인
         Optional<LikeComment> optionalLikeComment = likeCommentRepository.findByMember_IdAndCommentId(member.getId(), comment.getId());
 
         if (optionalLikeComment.isPresent()) {
-            // 좋아요가 이미 있다면 삭제
             likeCommentRepository.delete(optionalLikeComment.get());
             log.info("댓글 좋아요 삭제");
             return likeCommentRepository.countByCommentId(comment.getId());
         } else {
-            // 좋아요가 없다면 저장
             LikeComment likeComment = new LikeComment(comment, member);
             likeCommentRepository.save(likeComment);
             comment.getLikeComment().add(likeComment);
