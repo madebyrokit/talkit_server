@@ -16,9 +16,4 @@ public class SignDto {
         private String username;
         private String mbtiType;
     }
-
-    @Data
-    public static class JwtResponse {
-        private String token;
-    }
 }

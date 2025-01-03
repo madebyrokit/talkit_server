@@ -32,7 +32,7 @@ public class CommentController {
     @PutMapping
     public ResponseEntity<?> updateComment(@RequestBody CommentDto.UpdateRequest updateRequest, Authentication authentication) {
         Boolean comments = commentService.updateComment(updateRequest, authentication.getName());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(comments);
     }
 
     @DeleteMapping

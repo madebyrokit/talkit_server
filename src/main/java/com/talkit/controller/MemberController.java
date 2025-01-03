@@ -1,20 +1,25 @@
 package com.talkit.controller;
 
 
+import com.talkit.configuration.exception.AppException;
 import com.talkit.dto.MemberDto;
 import com.talkit.service.FileService;
 import com.talkit.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +33,9 @@ public class MemberController {
     private final MemberService memberService;
     private final FileService fileService;
 
+    @Value("${file.upload-dir}")
+    private String fileUploadPath;
+
     @PostMapping("/profileimage")
     public ResponseEntity<?> UploadProfileImage(@RequestParam("file") MultipartFile multipartFile, Authentication authentication) {
         log.info(multipartFile.getName());
@@ -36,34 +44,19 @@ public class MemberController {
         return ResponseEntity.ok().body("UPLOADED");
     }
 
-    @GetMapping("/{filename}")
-    public ResponseEntity<UrlResource> serveProfileImage(@PathVariable String filename) {
+    @GetMapping("/{fileName}")
+    public ResponseEntity<Resource> getImage(@PathVariable String fileName) {
+            Path filePath = Paths.get(fileUploadPath).resolve(fileName).normalize();
         try {
-            Path filePath = Paths.get("/Users/mac/Documents/file/").resolve(filename).normalize();
-            UrlResource resource = new UrlResource(filePath.toUri());
-
-            if (!resource.exists()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            String contentType = URLConnection.guessContentTypeFromName(filename);
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, contentType)
-                    .header(HttpHeaders.CONTENT_DISPOSITION,
-                            "inline; filename=\"" + resource.getFilename() + "\"")
-                    .body(resource);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            Resource resource = new UrlResource(filePath.toUri());
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+        } catch (MalformedURLException e) {
+            throw new AppException("sda", HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/info")
     public ResponseEntity<MemberDto.Response> getMemberInfo(Authentication authentication) {
-log.info("컨트롤러 {}",authentication.getName());
         return ResponseEntity.ok().body(memberService.getMemberInfo(authentication.getName()));
     }
 

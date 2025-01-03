@@ -16,6 +16,8 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String sessionId = accessor.getSessionId();
 
+        log.info("accessor is {}", accessor.getCommand());
+
         switch ((accessor.getCommand())) {
             case CONNECT:
 

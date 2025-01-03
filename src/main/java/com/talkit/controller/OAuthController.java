@@ -20,4 +20,9 @@ public class OAuthController {
         String token = OAuthService.processKakaoCallback(code);
         return ResponseEntity.ok(token);
     }
+
+    @GetMapping("/naver")
+    public ResponseEntity<?> naverCallBack(@RequestParam String code) {
+        return ResponseEntity.ok().build();
+    }
 }

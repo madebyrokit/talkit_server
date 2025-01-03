@@ -37,7 +37,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String userEmail = jwtProvider.getUserEmail(token);
 
-        log.info("{}", userEmail);
         if (!jwtProvider.validateJwt(token)) {
             log.error("token of {} is expired", userEmail);
             filterChain.doFilter(request, response);
@@ -51,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 List.of(new SimpleGrantedAuthority("USER"))
         );
 
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
