@@ -24,7 +24,6 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
 
     @Override
-
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, ServletException {
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
@@ -38,11 +37,9 @@ public class JwtFilter extends OncePerRequestFilter {
         String userEmail = jwtProvider.getUserEmail(token);
 
         if (!jwtProvider.validateJwt(token)) {
-            log.error("token of {} is expired", userEmail);
             filterChain.doFilter(request, response);
             return;
         }
-
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userEmail,

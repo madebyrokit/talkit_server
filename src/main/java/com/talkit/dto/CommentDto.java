@@ -8,7 +8,7 @@ public class CommentDto{
     public static class CreateRequest {
         private Long postId;
         private String content;
-        private String option;
+        private String opinion;
     }
 
     @Data
@@ -22,7 +22,7 @@ public class CommentDto{
         private String profileImage;
         private String option;
         private Long like;
-        private Date createAt;
+        private Date createdAt;
     }
 
     @Data
@@ -35,7 +35,7 @@ public class CommentDto{
         private String content;
         private String option;
         private Long like;
-        private Date createAt;
+        private Date createdAt;
     }
 
     @Data
@@ -48,6 +48,13 @@ public class CommentDto{
         private Long commentId;
         private String content;
         private String selectedOpinion;
+    }
+    @Data
+    @AllArgsConstructor
+    public static class UpdateResponse {
+        private Long commentId;
+        private String content;
+        private String opinion;
     }
 
     @Data
@@ -64,8 +71,8 @@ public class CommentDto{
         private String comment;
         private String selectedOption;
         private Long countLikeComment;
-        private Date createAtPost;
-        private Date createAtComment;
+        private Date createdAtPost;
+        private Date createdAtComment;
     }
 
     @Data
@@ -77,7 +84,7 @@ public class CommentDto{
         private String comment;
         private String selectedOption;
         private Long countLikeComment;
-        private Date createAtPost;
-        private Date createAtComment;
+        private Date createdAtPost;
+        private Date createdAtComment;
     }
 }

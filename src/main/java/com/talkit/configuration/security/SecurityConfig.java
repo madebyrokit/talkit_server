@@ -1,10 +1,7 @@
-package com.talkit.configuration;
+package com.talkit.configuration.security;
 
 import com.talkit.configuration.jwt.JwtFilter;
-import com.talkit.service.SignService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -53,7 +50,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://ec2-43-200-178-68.ap-northeast-2.compute.amazonaws.com", "http://localhost:3000", "http://192.168.31.125:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
-        configuration.addExposedHeader("authorization");
+        configuration.addExposedHeader("Authorization");
         configuration.setAllowCredentials(true);  // 쿠키와 인증 정보를 함께 보내도록 허용
         configuration.setMaxAge(3600L);  // preflight 요청에 대한 캐시 시간 (1시간)
 

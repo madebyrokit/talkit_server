@@ -1,10 +1,9 @@
-package com.talkit.repository;
+package com.talkit.repository.Comments;
 
 import com.talkit.entity.Comment;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface CommentRepositoryCustom {

@@ -6,12 +6,18 @@ import com.talkit.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -27,7 +33,7 @@ public class FileServiceImpl implements FileService{
     }
 
     @Override
-    public void upload(String userEmail, MultipartFile multipartFile) {
+    public String upload(String userEmail, MultipartFile multipartFile) {
         Member member = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
@@ -36,6 +42,7 @@ public class FileServiceImpl implements FileService{
         member.getProfile_image().setOriginalFileName(multipartFile.getName());
         member.getProfile_image().setStoreFileName(fileName);
         memberRepository.save(member);
+        return fileName;
     }
 
     @Override
@@ -47,9 +54,19 @@ public class FileServiceImpl implements FileService{
         try {
             multipartFile.transferTo(new File(getFullPath(storeFileName)));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AppException("Avatar 저장 실패", HttpStatus.NOT_FOUND);
         }
 
         return storeFileName;
+    }
+
+    @Override
+    public Resource getAvatar(String fileName) {
+        try {
+            Path path = Paths.get(filePath).resolve(fileName).normalize();
+            return new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            throw new AppException("파일을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
     }
 }

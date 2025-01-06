@@ -6,14 +6,13 @@ import com.talkit.entity.Comment;
 import com.talkit.entity.LikeComment;
 import com.talkit.entity.Member;
 import com.talkit.entity.Post;
-import com.talkit.repository.CommentRepository;
+import com.talkit.repository.Comments.CommentRepository;
 import com.talkit.repository.LikeCommentRepository;
 import com.talkit.repository.MemberRepository;
-import com.talkit.repository.PostRepository;
+import com.talkit.repository.posts.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
                 createRequest.getContent(),
                 post,
                 member,
-                createRequest.getOption(),
+                createRequest.getOpinion(),
                 new Date()
         );
 
@@ -86,7 +85,7 @@ public class CommentServiceImpl implements CommentService {
                 getResponse.setContent(comment.getContent());
                 getResponse.setOption(comment.getSelectOption());
                 getResponse.setLike(likeCommentRepository.countByCommentId(comment.getId()));
-                getResponse.setCreateAt(comment.getCreatedAt());
+                getResponse.setCreatedAt(comment.getCreatedAt());
 
                 getResponseList.add(getResponse);
             }
@@ -97,7 +96,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Boolean updateComment(CommentDto.UpdateRequest updateCommentRequest, String username) {
+    public CommentDto.UpdateResponse updateComment(CommentDto.UpdateRequest updateCommentRequest, String username) {
         Comment comment = commentRepository.findById(updateCommentRequest.getCommentId())
                 .orElseThrow(() -> new AppException("댓글을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
@@ -105,7 +104,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setSelectOption(updateCommentRequest.getSelectedOpinion());
 
         commentRepository.save(comment);
-        return true;
+        return new CommentDto.UpdateResponse(comment.getId(), comment.getContent(), comment.getSelectOption());
     }
 
     @Override

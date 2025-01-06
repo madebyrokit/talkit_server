@@ -15,12 +15,13 @@ import java.util.List;
 @RequestMapping("/comment")
 @RequiredArgsConstructor
 public class CommentController {
-
     private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<CommentDto.CreateResponse> createComment(@RequestBody CommentDto.CreateRequest createRequest, Authentication authentication) {
-        return ResponseEntity.ok().body(commentService.createComment(createRequest, authentication.getName()));
+        String userEmail = authentication.getName();
+        CommentDto.CreateResponse createResponse = commentService.createComment(createRequest, userEmail);
+        return ResponseEntity.ok().body(createResponse);
     }
 
     @GetMapping("/list")// repair
@@ -30,18 +31,23 @@ public class CommentController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateComment(@RequestBody CommentDto.UpdateRequest updateRequest, Authentication authentication) {
-        Boolean comments = commentService.updateComment(updateRequest, authentication.getName());
+    public ResponseEntity<CommentDto.UpdateResponse> updateComment(@RequestBody CommentDto.UpdateRequest updateRequest, Authentication authentication) {
+        String userEmail = authentication.getName();
+        CommentDto.UpdateResponse comments = commentService.updateComment(updateRequest, userEmail);
         return ResponseEntity.ok().body(comments);
     }
 
     @DeleteMapping
-    public void deleteComment(@RequestParam Long commentid, Authentication authentication) {
-        commentService.deleteComment(commentid, authentication.getName());
+    public ResponseEntity<?> deleteComment(@RequestParam Long commentid, Authentication authentication) {
+        String userEmail = authentication.getName();
+        commentService.deleteComment(commentid, userEmail);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/like")
-    public ResponseEntity<Long> toggleLikeComment(@RequestBody CommentDto.LikeRequest likeRequest, Authentication authentication) {
-        return ResponseEntity.ok().body(commentService.toggleLike(likeRequest.getCommentId(), authentication.getName()));
+    @PostMapping("/L")
+    public ResponseEntity<Long> toggleLikeByComment(@RequestBody CommentDto.LikeRequest likeRequest, Authentication authentication) {
+        String userEmail = authentication.getName();
+        Long countLiked = commentService.toggleLike(likeRequest.getCommentId(), userEmail);
+        return ResponseEntity.ok().body(countLiked);
     }
 }

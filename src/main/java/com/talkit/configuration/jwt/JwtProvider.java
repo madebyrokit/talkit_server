@@ -22,7 +22,7 @@ public class JwtProvider {
     }
 
     public String createToken(String userEmail) {
-        long expireTimeMs = 1000 * 60 * 180L;
+        long expireTimeMs = 1000 * 60 * 180L; // 3 hours
 
         return Jwts.builder()
                 .subject(userEmail)

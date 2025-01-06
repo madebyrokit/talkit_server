@@ -2,9 +2,9 @@ package com.talkit.service;
 
 import com.talkit.dto.PostDto;
 import com.talkit.entity.Post;
-import com.talkit.repository.CommentRepository;
+import com.talkit.repository.Comments.CommentRepository;
 import com.talkit.repository.LikePostRepository;
-import com.talkit.repository.PostRepository;
+import com.talkit.repository.posts.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +24,6 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public List<PostDto.ListResponse> getPostListByKeyword(int page, int size, String keyword) {
-        log.info("{} s {} s {}", page,size, keyword);
         PageRequest pageRequest = PageRequest.of(page, size);
         List<Post> postList = postRepository.getPostByKeyword(pageRequest, keyword);
 

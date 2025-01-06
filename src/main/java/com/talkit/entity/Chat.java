@@ -17,6 +17,9 @@ public class Chat {
     private Long id;
 
     @Column
+    private String uuid;
+
+    @Column
     private String username;
 
     @Column

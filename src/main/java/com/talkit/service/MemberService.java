@@ -5,7 +5,6 @@ import com.talkit.dto.MemberDto;
 import java.util.List;
 
 public interface  MemberService {
-    void UploadProfileImage(String email);
     MemberDto.Response getMemberInfo(String userEmail);
     void deleteMember(String userEmail);
     MemberDto.Response updateMember(MemberDto.Request request, String userEmail);

@@ -19,6 +19,7 @@ public class SearchController {
 
     @GetMapping
     public ResponseEntity<List<PostDto.ListResponse>> getSearchList(@RequestParam int page, @RequestParam int size, @RequestParam String q) {
-        return ResponseEntity.ok().body(searchService.getPostListByKeyword(page, size, q));
+        List<PostDto.ListResponse> listResponses = searchService.getPostListByKeyword(page, size, q);
+        return ResponseEntity.ok().body(listResponses);
     }
 }

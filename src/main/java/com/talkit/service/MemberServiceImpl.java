@@ -4,6 +4,8 @@ import com.talkit.configuration.exception.AppException;
 import com.talkit.dto.MemberDto;
 import com.talkit.entity.*;
 import com.talkit.repository.*;
+import com.talkit.repository.Comments.CommentRepository;
+import com.talkit.repository.posts.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,11 +27,6 @@ public class MemberServiceImpl implements MemberService{
     private final LikeCommentRepository likeCommentRepository;
     private final FileService fileService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Override
-    public void UploadProfileImage(String email) {
-
-    }
 
     @Override
     public MemberDto.Response getMemberInfo(String userEmail) {

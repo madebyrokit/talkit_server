@@ -1,4 +1,4 @@
-package com.talkit.repository;
+package com.talkit.repository.posts;
 
 import com.talkit.entity.Post;
 import org.springframework.data.domain.PageRequest;

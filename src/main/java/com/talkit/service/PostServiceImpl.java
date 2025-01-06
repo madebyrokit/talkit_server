@@ -9,14 +9,13 @@ import com.talkit.entity.LikePost;
 import com.talkit.entity.Member;
 import com.talkit.entity.Post;
 import com.talkit.repository.*;
+import com.talkit.repository.Comments.CommentRepository;
+import com.talkit.repository.posts.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,9 +28,9 @@ public class PostServiceImpl implements PostService{
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final LikePostRepository likePostRepository;
     private final LikeCommentRepository likeCommentRepository;
-    private final CommentRepository commentRepository;
 
     @Override
     public PostDto.CreateResponse createPost(PostDto.CreateRequest createRequest, String userEmail) {
@@ -41,8 +40,8 @@ public class PostServiceImpl implements PostService{
         Post post = new Post(
                 null,
                 createRequest.getTitle(),
-                createRequest.getOptionA(),
-                createRequest.getOptionB(),
+                createRequest.getOpinionA(),
+                createRequest.getOpinionB(),
                 member,
                 new Date(),
                 0L,
@@ -74,7 +73,6 @@ public class PostServiceImpl implements PostService{
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("id")));
 
         if (sort.equals("like_desc")) {
-            log.info("like");
             List<Post> postPage = postRepository.getPostListOrderByLikeCountDesc(pageable);
 
             return postPage.stream()
@@ -87,15 +85,14 @@ public class PostServiceImpl implements PostService{
                             post.getTitle(),
                             post.getOptionA(),
                             post.getOptionB(),
-                            commentRepository.countByPostId(post.getId()),  // 댓글 수 카운팅
+                            commentRepository.countByPostId(post.getId()),
                             post.getCreatedAt(),
                             post.getView(),
-                            likePostRepository.countByPostId(post.getId())  // 좋아요 수 카운팅
+                            likePostRepository.countByPostId(post.getId())
                     ))
                     .collect(Collectors.toList());
 
         } else if (sort.equals("view_desc")) {
-            log.info("view");
             List<Post> postPage = postRepository.getPostListOrderByViewDesc(pageable);
             return postPage.stream()
                     .map(post -> new PostDto.ListResponse(
@@ -107,14 +104,13 @@ public class PostServiceImpl implements PostService{
                             post.getTitle(),
                             post.getOptionA(),
                             post.getOptionB(),
-                            commentRepository.countByPostId(post.getId()),  // 댓글 수 카운팅
+                            commentRepository.countByPostId(post.getId()),
                             post.getCreatedAt(),
                             post.getView(),
-                            likePostRepository.countByPostId(post.getId())  // 좋아요 수 카운팅
+                            likePostRepository.countByPostId(post.getId())
                     ))
                     .collect(Collectors.toList());
         } else if (sort.equals("last")) {
-            log.info("last");
             List<Post> postPage = postRepository.getPostListOrderByIdDesc(pageable);
             return postPage.stream()
                     .map(post -> new PostDto.ListResponse(
@@ -126,14 +122,13 @@ public class PostServiceImpl implements PostService{
                             post.getTitle(),
                             post.getOptionA(),
                             post.getOptionB(),
-                            commentRepository.countByPostId(post.getId()),  // 댓글 수 카운팅
+                            commentRepository.countByPostId(post.getId()),
                             post.getCreatedAt(),
                             post.getView(),
-                            likePostRepository.countByPostId(post.getId())  // 좋아요 수 카운팅
+                            likePostRepository.countByPostId(post.getId())
                     ))
                     .collect(Collectors.toList());
         } else if (sort.equals("comment_desc")) {
-            log.info("comment");
             List<Post> postPage = postRepository.getPostListOrderByCommentDesc(pageable);
             return postPage.stream()
                     .map(post -> new PostDto.ListResponse(
@@ -145,10 +140,10 @@ public class PostServiceImpl implements PostService{
                             post.getTitle(),
                             post.getOptionA(),
                             post.getOptionB(),
-                            commentRepository.countByPostId(post.getId()),  // 댓글 수 카운팅
+                            commentRepository.countByPostId(post.getId()),
                             post.getCreatedAt(),
                             post.getView(),
-                            likePostRepository.countByPostId(post.getId())  // 좋아요 수 카운팅
+                            likePostRepository.countByPostId(post.getId())
                     ))
                     .collect(Collectors.toList());
         }
@@ -177,8 +172,8 @@ public class PostServiceImpl implements PostService{
                 getTopCommentADto.setComment(getTopCommentA.getContent());
                 getTopCommentADto.setSelectedOption(getTopCommentA.getSelectOption());
                 getTopCommentADto.setCountLikeComment(likeCommentRepository.countByCommentId(getTopCommentA.getId()));
-                getTopCommentADto.setCreateAtPost(getTopCommentA.getPost().getCreatedAt());
-                getTopCommentADto.setCreateAtComment(getTopCommentA.getCreatedAt());
+                getTopCommentADto.setCreatedAtPost(getTopCommentA.getPost().getCreatedAt());
+                getTopCommentADto.setCreatedAtComment(getTopCommentA.getCreatedAt());
 
             } else {
                 getTopCommentADto = null;
@@ -196,8 +191,8 @@ public class PostServiceImpl implements PostService{
                 getTopCommentBDto.setComment(getTopCommentB.getContent());
                 getTopCommentBDto.setSelectedOption(getTopCommentB.getSelectOption());
                 getTopCommentBDto.setCountLikeComment(likeCommentRepository.countByCommentId(getTopCommentB.getId()));
-                getTopCommentBDto.setCreateAtPost(getTopCommentB.getPost().getCreatedAt());
-                getTopCommentBDto.setCreateAtComment(getTopCommentB.getCreatedAt());
+                getTopCommentBDto.setCreatedAtPost(getTopCommentB.getPost().getCreatedAt());
+                getTopCommentBDto.setCreatedAtComment(getTopCommentB.getCreatedAt());
 
             } else {
                 getTopCommentBDto = null;
@@ -228,7 +223,7 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
-    public void updatePost(PostDto.UpdateRequest updatePostRequest, String username) {
+    public PostDto.UpdateResponse updatePost(PostDto.UpdateRequest updatePostRequest, String username) {
         Post post = postRepository.findById(updatePostRequest.getPostId()).orElseThrow(()->
                 new AppException("게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)
         );
@@ -237,6 +232,7 @@ public class PostServiceImpl implements PostService{
         post.setOptionB(updatePostRequest.getOpinionB());
 
         postRepository.save(post);
+        return new PostDto.UpdateResponse(post.getId(), post.getTitle(), post.getOptionA(), post.getOptionB());
     }
 
     @Override

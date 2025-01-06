@@ -1,4 +1,4 @@
-package com.talkit.repository;
+package com.talkit.repository.posts;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.talkit.entity.Post;

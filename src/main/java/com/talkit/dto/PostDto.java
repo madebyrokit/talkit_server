@@ -1,6 +1,7 @@
 package com.talkit.dto;
 
 import lombok.*;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.Date;
 
@@ -8,8 +9,8 @@ public class PostDto {
     @Data
     public static class CreateRequest {
         private String title;
-        private String optionA;
-        private String optionB;
+        private String opinionA;
+        private String opinionB;
     }
 
     @Data
@@ -21,10 +22,10 @@ public class PostDto {
         private String mbtiType;
         private String profileImage;
         private String title;
-        private String optionA;
-        private String optionB;
+        private String opinionA;
+        private String opinionB;
         private Long countComment;
-        private Date createAt;
+        private Date createdAt;
         private Long view;
         private Long like;
     }
@@ -38,9 +39,9 @@ public class PostDto {
         private String mbtiType;
         private String profileImage;
         private String title;
-        private String optionA;
-        private String optionB;
-        private Date createAt;
+        private String opinionA;
+        private String opinionB;
+        private Date createdAt;
         private Long view;
         private Long like;
         private Long countComment;
@@ -59,16 +60,25 @@ public class PostDto {
         private String mbtiType;
         private String profileImage;
         private String title;
-        private String optionA;
-        private String optionB;
+        private String opinionA;
+        private String opinionB;
         private Long countComment;
-        private Date createAt;
+        private Date createdAt;
         private Long view;
         private Long like;
     }
 
     @Data
     public static class UpdateRequest {
+        private Long postId;
+        private String title;
+        private String opinionA;
+        private String opinionB;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class UpdateResponse {
         private Long postId;
         private String title;
         private String opinionA;

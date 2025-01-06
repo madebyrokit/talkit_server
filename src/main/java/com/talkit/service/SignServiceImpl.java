@@ -24,6 +24,18 @@ public class SignServiceImpl implements SignService{
     private final JwtProvider jwtProvider;
 
     @Override
+    public String getSign(SignDto.LoginRequest loginRequest) {
+        Member member = memberRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.NOT_FOUND));
+
+        if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
+            log.info("{} password error", member.getEmail());
+            throw new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.NOT_FOUND);
+        }
+        return jwtProvider.createToken(member.getEmail());
+    }
+
+    @Override
     public void signup(SignDto.SignUpRequest signUpRequest) {
 
         Optional<Member> findMember = memberRepository.findByEmail(signUpRequest.getEmail());
@@ -45,21 +57,4 @@ public class SignServiceImpl implements SignService{
             throw new AppException("비밀번호가 일치하지 않습니다.", HttpStatus.NOT_FOUND);
         }
     }
-
-    @Override
-    public String getSign(SignDto.LoginRequest loginRequest) {
-        Member member = memberRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.NOT_FOUND));
-
-        if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
-            log.info("{} password error", member.getEmail());
-            throw new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.NOT_FOUND);
-        }
-        log.info("{} signin", member.getEmail());
-
-        return jwtProvider.createToken(member.getEmail());
-    }
-
-
-
 }

@@ -19,7 +19,7 @@ public class SignController {
     private final SignService signService;
 
     @PostMapping("/up")
-    public ResponseEntity<?> sign(@RequestBody SignDto.SignUpRequest signUpRequest) {
+    public ResponseEntity<?> signUp(@RequestBody SignDto.SignUpRequest signUpRequest) {
         signService.signup(signUpRequest);
         return ResponseEntity.ok().build();
     }
@@ -27,7 +27,8 @@ public class SignController {
     @PostMapping("/in")
     public ResponseEntity<String> login(@RequestBody SignDto.LoginRequest loginRequest) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("authorization", "Bearer " + signService.getSign(loginRequest));
+        String token = signService.getSign(loginRequest);
+        headers.add("Authorization", "Bearer " + token);
         return ResponseEntity.ok().headers(headers).build();
     }
 }

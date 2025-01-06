@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class KakaoOAuthServiceImpl implements OAuthService {
+public class OAuth2ServiceImpl implements OAuth2Service {
 
     private final AuthenticationManager authenticationManager;
     private final MemberRepository memberRepository;
@@ -29,7 +29,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
     private String key;
     private Long expireTimeMs = 1000 * 60 * 60L;
     @Override
-    public String processKakaoCallback(String code) {
+    public String kakao(String code) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -87,6 +87,11 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         log.info(kakaoProfile.getNickname());
 
         return new String("임시");
+    }
+
+    @Override
+    public String naver(String code) {
+        return "";
     }
 }
 

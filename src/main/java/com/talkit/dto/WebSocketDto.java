@@ -18,4 +18,10 @@ public class WebSocketDto {
         String username;
         String content;
     }
+
+    @Data
+    @AllArgsConstructor
+    public static class Join {
+        String username;
+    }
 }

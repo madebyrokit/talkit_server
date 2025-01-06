@@ -15,19 +15,21 @@ public class ChatService {
 
     public void saveChat(WebSocketDto.Request request) {
         Chat chat = new Chat();
+        chat.setUuid(request.getUuid());
         chat.setUsername(request.getUsername());
         chat.setContent(request.getContent());
         chat.setCreatedAt(new Date());
 
         chatRepository.save(chat);
     }
+
     public List<WebSocketDto.Response> getChatList() {
         List<Chat> chatList = chatRepository.findTop20Chat();
 
         List<WebSocketDto.Response> responseList = new ArrayList<>();
         for (Chat chat : chatList) {
             WebSocketDto.Response response = new WebSocketDto.Response(
-                    null,
+                    chat.getUuid(),
                     chat.getUsername(),
                     chat.getContent()
             );

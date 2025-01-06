@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/chat")
@@ -25,25 +23,29 @@ import java.util.Map;
 @Slf4j
 public class WebSocketController {
     private final ChatService chatService;
-    private Map<String,String> session = new HashMap<>();
 
-//    @EventListener
-//    public void handleWebSocketConnectListener(SessionConnectEvent event) {
-//        StompHeaderAccessor headerAccesor = StompHeaderAccessor.wrap(event.getMessage());
-//        String sessionId = headerAccesor.getSessionId();
-//        log.info("세션 연결함: {}", sessionId);
-//    }
-//
-//    @EventListener
-//    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-//        StompHeaderAccessor headerAccesor = StompHeaderAccessor.wrap(event.getMessage());
-//        String sessionId = headerAccesor.getSessionId();
-//        log.info("세션 연결 끊음: {}", sessionId);
-//    }
+
+    @EventListener
+    @SendTo("/topic/join")
+    public ResponseEntity<WebSocketDto.Join> handleWebSocketConnectListener(SessionConnectEvent event) {
+        StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String sessionId = stompHeaderAccessor.getSessionId();
+        log.info("세션 연결함: {}", sessionId);
+        WebSocketDto.Join join = new WebSocketDto.Join(sessionId); // test
+        return ResponseEntity.ok().body(join);
+    }
+
+    @EventListener
+    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+        StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String sessionId = stompHeaderAccessor.getSessionId();
+        log.info("세션 연결 끊음: {}", sessionId);
+    }
 
     @GetMapping
     public ResponseEntity<List<WebSocketDto.Response>> getChatList() {
-        return ResponseEntity.ok().body(chatService.getChatList());
+        List<WebSocketDto.Response> responseList = chatService.getChatList();
+        return ResponseEntity.ok().body(responseList);
     }
 
     @MessageMapping("/message")

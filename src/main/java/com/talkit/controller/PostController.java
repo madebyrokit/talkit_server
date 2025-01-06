@@ -5,7 +5,6 @@ import com.talkit.dto.PostDto;
 import com.talkit.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,43 +22,47 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDto.CreateResponse> createPost(@RequestBody PostDto.CreateRequest createRequest, Authentication authentication) {
-        return ResponseEntity.ok().body(postService.createPost(createRequest, authentication.getName()));
+        String userEmail = authentication.getName();
+        PostDto.CreateResponse createResponse = postService.createPost(createRequest, userEmail);
+        return ResponseEntity.ok().body(createResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<PostDto.Response> getPost(@RequestParam Long postid) {
+        PostDto.Response postResponse = postService.getPost(postid);
+        return ResponseEntity.ok(postResponse);
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<PostDto.ListResponse>> getPostList(@RequestParam int page, @RequestParam int size, @RequestParam String sort) {
-        return ResponseEntity.ok().body(postService.getPostList(page, size, sort));
-    }
-
-    @GetMapping()
-    public ResponseEntity<PostDto.Response> getPost(@RequestParam Long postid) {
-        PostDto.Response postResponse = postService.getPost(postid);
-        if (postResponse != null) {
-            return ResponseEntity.ok(postResponse);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        List<PostDto.ListResponse> listResponses = postService.getPostList(page, size, sort);
+        return ResponseEntity.ok().body(listResponses);
     }
 
     @PutMapping
-    public void updatePost(@RequestBody PostDto.UpdateRequest updatePostRequest, Authentication authentication) {
-        postService.updatePost(updatePostRequest, authentication.getName());
+    public ResponseEntity<PostDto.UpdateResponse> updatePost(@RequestBody PostDto.UpdateRequest updatePostRequest, Authentication authentication) {
+        String userEmail = authentication.getName();
+        PostDto.UpdateResponse updateResponse = postService.updatePost(updatePostRequest, userEmail);
+        return ResponseEntity.ok().body(updateResponse);
     }
 
     @DeleteMapping
     public ResponseEntity<?> deletePost(@RequestParam Long postid, Authentication authentication) {
-        postService.deletePost(postid, authentication.getName());
+        String userEmail = authentication.getName();
+        postService.deletePost(postid, userEmail);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/like")
+    @PostMapping("/L")
     public ResponseEntity<Long> toggleLike(@RequestBody PostDto.LikePostRequest likePostRequest, Authentication authentication) {
-        return ResponseEntity.ok().body(postService.toggleToLikePost(likePostRequest, authentication.getName()));
+        String userEmail = authentication.getName();
+        Long countLiked = postService.toggleToLikePost(likePostRequest, userEmail);
+        return ResponseEntity.ok().body(countLiked);
     }
 
     @GetMapping("/barchart")
     public ResponseEntity<PostDto.logicResponse> barchart() {
-
-        return ResponseEntity.ok().body(postService.barchart());
+        PostDto.logicResponse logicResponse = postService.barchart();
+        return ResponseEntity.ok().body(logicResponse);
     }
 }

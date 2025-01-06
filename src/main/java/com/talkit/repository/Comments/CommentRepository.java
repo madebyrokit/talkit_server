@@ -1,4 +1,4 @@
-package com.talkit.repository;
+package com.talkit.repository.Comments;
 
 import com.talkit.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;

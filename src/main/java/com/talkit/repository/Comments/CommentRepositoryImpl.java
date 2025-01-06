@@ -1,4 +1,4 @@
-package com.talkit.repository;
+package com.talkit.repository.Comments;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.talkit.entity.Comment;
