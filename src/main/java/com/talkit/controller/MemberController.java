@@ -23,9 +23,6 @@ public class MemberController {
     private final MemberService memberService;
     private final FileService fileService;
 
-    @Value("${file.upload-dir}")
-    private String fileUploadPath;
-
     @PostMapping("/avatar")
     public ResponseEntity<String> UploadProfileImage(@RequestParam("file") MultipartFile multipartFile, Authentication authentication) {
         String userEmail = authentication.getName();
@@ -60,28 +57,28 @@ public class MemberController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/posts")
+    @PostMapping("/posts")
     public ResponseEntity<List<MemberDto.ResponsePostList>> getPostListByMember(Authentication authentication) {
         String userEmail = authentication.getName();
         List<MemberDto.ResponsePostList> responsePostLists = memberService.getPostListByMember(userEmail);
         return ResponseEntity.ok().body(responsePostLists);
     }
 
-    @GetMapping("/comments")
+    @PostMapping("/comments")
     public ResponseEntity<List<MemberDto.ResponseCommentList>> getCommentListByMember(Authentication authentication) {
         String userEmail = authentication.getName();
         List<MemberDto.ResponseCommentList> responseCommentList = memberService.getCommentListByMember(userEmail);
         return ResponseEntity.ok().body(responseCommentList);
     }
 
-    @GetMapping("/posts/L")
+    @PostMapping("/posts/L")
     public ResponseEntity<List<MemberDto.ResponseLikedPostList>> getLikedPostListByMember(Authentication authentication) {
         String userEmail = authentication.getName();
         List<MemberDto.ResponseLikedPostList> responseLikedPostLists = memberService.getLikedPostListByMember(userEmail);
         return ResponseEntity.ok().body(responseLikedPostLists);
     }
 
-    @GetMapping("/comments/L")
+    @PostMapping("/comments/L")
     public ResponseEntity<List<MemberDto.ResponseLikedCommentList>> getCLikedCommentPostListByMember(Authentication authentication) {
         String userEmail = authentication.getName();
         List<MemberDto.ResponseLikedCommentList> responseLikedCommentLists = memberService.getLikedCommentListByMember(userEmail);
