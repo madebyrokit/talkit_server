@@ -3,6 +3,7 @@ package com.talkit.controller;
 import com.talkit.dto.MemberDto;
 import com.talkit.service.FileService;
 import com.talkit.service.MemberService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
