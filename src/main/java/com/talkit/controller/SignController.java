@@ -11,21 +11,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/sign")
 @Slf4j
 @RequiredArgsConstructor
 public class SignController {
     private final SignService signService;
     private final JwtProvider jwtProvider;
 
-    @PostMapping("/up")
+    @PostMapping("/register")
     public ResponseEntity<?> sign(@RequestBody SignDto.SignUpRequest signUpRequest) {
-        log.info("가입");
         signService.signup(signUpRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("OK");
     }
 
-    @PostMapping("/in")
+    @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody SignDto.LoginRequest loginRequest) {
         String token = signService.getSign(loginRequest);
         HttpHeaders headers = new HttpHeaders();
