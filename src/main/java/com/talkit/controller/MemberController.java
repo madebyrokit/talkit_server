@@ -3,17 +3,22 @@ package com.talkit.controller;
 import com.talkit.dto.MemberDto;
 import com.talkit.service.FileService;
 import com.talkit.service.MemberService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URLConnection;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -24,66 +29,54 @@ public class MemberController {
     private final MemberService memberService;
     private final FileService fileService;
 
-    @PostMapping("/avatar")
-    public ResponseEntity<String> UploadProfileImage(@RequestParam("file") MultipartFile multipartFile, Authentication authentication) {
-        String userEmail = authentication.getName();
-        String storedFilePath = fileService.upload(userEmail, multipartFile);
-        return ResponseEntity.ok().body(storedFilePath);
+    @GetMapping
+    public ResponseEntity<MemberDto.Response> getMemberInfo(Authentication authentication) {
+        return ResponseEntity.ok().body(memberService.getMemberInfo(authentication.getName()));
     }
 
-    @GetMapping("/{avatar}")
-    public ResponseEntity<Resource> getImage(@PathVariable String avatar) {
-        Resource resource = fileService.getAvatar(avatar);
+    @GetMapping("/{filename}")
+    public ResponseEntity<UrlResource> getAvatar(@PathVariable String filename) throws MalformedURLException {
+        Path filePath = Paths.get("/Users/mac/Documents/file/").resolve(filename).normalize();
+        UrlResource resource = new UrlResource(filePath.toUri());
+
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<MemberDto.Response> getMemberInfo(Authentication authentication) {
-        String userEmail = authentication.getName();
-        MemberDto.Response response = memberService.getMemberInfo(userEmail);
-        return ResponseEntity.ok().body(response);
+    @PostMapping("/avatar")
+    public ResponseEntity<?> uploadAvatar(@RequestParam("file") MultipartFile multipartFile, Authentication authentication) {
+        log.info(multipartFile.getName());
+        log.info(authentication.getName());
+        fileService.upload(authentication.getName(), multipartFile);
+        return ResponseEntity.ok().body("avatar is uploaded");
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateMember(@RequestBody MemberDto.Request request, Authentication authentication) {
+        return ResponseEntity.ok().body(memberService.updateMember(request, authentication.getName()));
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteMember(Authentication authentication) {
-        String userEmail = authentication.getName();
-        memberService.deleteMember(userEmail);
-        return ResponseEntity.ok().build();
+        memberService.deleteMember(authentication.getName());
+        return ResponseEntity.ok().body("member is deleted");
     }
 
-    @PutMapping
-    public ResponseEntity<MemberDto.Response> updateMember(@RequestBody MemberDto.Request request, Authentication authentication) {
-        String userEmail = authentication.getName();
-        MemberDto.Response response = memberService.updateMember(request, userEmail);
-        return ResponseEntity.ok().body(response);
-    }
-
-    @PostMapping("/posts")
+    // detail
+    @GetMapping("/posts")
     public ResponseEntity<List<MemberDto.ResponsePostList>> getPostListByMember(Authentication authentication) {
-        String userEmail = authentication.getName();
-        List<MemberDto.ResponsePostList> responsePostLists = memberService.getPostListByMember(userEmail);
-        return ResponseEntity.ok().body(responsePostLists);
+        return ResponseEntity.ok().body(memberService.getPostListByMember(authentication.getName()));
     }
-
-    @PostMapping("/comments")
+    @GetMapping("/comments")
     public ResponseEntity<List<MemberDto.ResponseCommentList>> getCommentListByMember(Authentication authentication) {
-        String userEmail = authentication.getName();
-        List<MemberDto.ResponseCommentList> responseCommentList = memberService.getCommentListByMember(userEmail);
-        return ResponseEntity.ok().body(responseCommentList);
+        return ResponseEntity.ok().body(memberService.getCommentListByMember(authentication.getName()));
     }
-
-    @PostMapping("/posts/L")
+    @GetMapping("/posts/liked")
     public ResponseEntity<List<MemberDto.ResponseLikedPostList>> getLikedPostListByMember(Authentication authentication) {
-        String userEmail = authentication.getName();
-        List<MemberDto.ResponseLikedPostList> responseLikedPostLists = memberService.getLikedPostListByMember(userEmail);
-        return ResponseEntity.ok().body(responseLikedPostLists);
+        return ResponseEntity.ok().body(memberService.getLikedPostListByMember(authentication.getName()));
     }
-
-    @PostMapping("/comments/L")
+    @GetMapping("/comments/liked")
     public ResponseEntity<List<MemberDto.ResponseLikedCommentList>> getCLikedCommentPostListByMember(Authentication authentication) {
-        String userEmail = authentication.getName();
-        List<MemberDto.ResponseLikedCommentList> responseLikedCommentLists = memberService.getLikedCommentListByMember(userEmail);
-        return ResponseEntity.ok().body(responseLikedCommentLists);
+        return ResponseEntity.ok().body(memberService.getLikedCommentListByMember(authentication.getName()));
     }
 
 }
