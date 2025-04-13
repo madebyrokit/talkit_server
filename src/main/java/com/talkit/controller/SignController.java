@@ -20,7 +20,6 @@ public class SignController {
     @PostMapping("/register")
     public ResponseEntity<?> sign(@RequestBody SignDto.SignUpRequest signUpRequest) {
         signService.signup(signUpRequest);
-        String test;
         return ResponseEntity.ok().body("OK");
     }
 
