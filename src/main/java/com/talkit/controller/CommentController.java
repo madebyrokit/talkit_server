@@ -12,22 +12,22 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/comment")
+@RequestMapping("/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<CommentDto.CreateResponse> createComment(@RequestBody CommentDto.CreateRequest createRequest, Authentication authentication) {
-        String userEmail = authentication.getName();
-        CommentDto.CreateResponse createResponse = commentService.createComment(createRequest, userEmail);
+        String email = authentication.getName();
+        CommentDto.CreateResponse createResponse = commentService.createComment(createRequest, email);
         return ResponseEntity.ok().body(createResponse);
     }
 
-    @GetMapping("/list")// repair
+    @GetMapping
     public ResponseEntity<List<CommentDto.GetResponse>> getCommentList(@RequestParam int page, @RequestParam int size, @RequestParam Long postid) {
-        List<CommentDto.GetResponse> comments = commentService.getCommentList(page, size, postid);
-        return ResponseEntity.ok(comments);
+        List<CommentDto.GetResponse> commentList = commentService.getCommentList(page, size, postid);
+        return ResponseEntity.ok().body(commentList);
     }
 
     @PutMapping
@@ -38,14 +38,14 @@ public class CommentController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteComment(@RequestParam Long commentid, Authentication authentication) {
+    public ResponseEntity<?> deleteComment(@RequestParam Long comment_id, Authentication authentication) {
         String userEmail = authentication.getName();
-        commentService.deleteComment(commentid, userEmail);
+        commentService.deleteComment(comment_id, userEmail);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/L")
-    public ResponseEntity<Long> toggleLikeByComment(@RequestBody CommentDto.LikeRequest likeRequest, Authentication authentication) {
+    @PostMapping("/liked")
+    public ResponseEntity<Long> switchLike(@RequestBody CommentDto.LikeRequest likeRequest, Authentication authentication) {
         String userEmail = authentication.getName();
         Long countLiked = commentService.toggleLike(likeRequest.getCommentId(), userEmail);
         return ResponseEntity.ok().body(countLiked);
