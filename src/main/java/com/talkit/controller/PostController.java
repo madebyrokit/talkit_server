@@ -59,7 +59,8 @@ public class PostController {
 
     @GetMapping("/barchart")
     public ResponseEntity<PostDto.logicResponse> barchart() {
-
+        String test;
         return ResponseEntity.ok().body(postService.barchart());
     }
+
 }
