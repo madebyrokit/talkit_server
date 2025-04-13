@@ -1,12 +1,13 @@
 package com.talkit.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
 
 public class MemberDto {
     @Data
-    public static class Request {
+    public static class Register {
         private String email;
         private String username;
         private String password;
@@ -15,12 +16,14 @@ public class MemberDto {
     }
 
     @Data
+    @AllArgsConstructor
     public static class Response {
         private Long id;
         private String email;
         private String username;
-        private String mbtiType;
-        private String profileImage;
+        private String avatar;
+        private String mbti_type;
+        private String o_auth_type;
     }
     @Data
     public static class ResponsePostList {

@@ -57,7 +57,7 @@ public class PostServiceImpl implements PostService{
                 newPost.getMember().getId(),
                 newPost.getMember().getUsername(),
                 newPost.getMember().getMbtitype(),
-                newPost.getMember().getProfile_image().getStoreFileName(),
+                newPost.getMember().getAvatar().getStoreFileName(),
                 newPost.getTitle(),
                 newPost.getOptionA(),
                 newPost.getOptionB(),
@@ -81,7 +81,7 @@ public class PostServiceImpl implements PostService{
                             post.getMember().getId(),
                             post.getMember().getUsername(),
                             post.getMember().getMbtitype(),
-                            post.getMember().getProfile_image().getStoreFileName(),
+                            post.getMember().getAvatar().getStoreFileName(),
                             post.getTitle(),
                             post.getOptionA(),
                             post.getOptionB(),
@@ -100,7 +100,7 @@ public class PostServiceImpl implements PostService{
                             post.getMember().getId(),
                             post.getMember().getUsername(),
                             post.getMember().getMbtitype(),
-                            post.getMember().getProfile_image().getStoreFileName(),
+                            post.getMember().getAvatar().getStoreFileName(),
                             post.getTitle(),
                             post.getOptionA(),
                             post.getOptionB(),
@@ -118,7 +118,7 @@ public class PostServiceImpl implements PostService{
                             post.getMember().getId(),
                             post.getMember().getUsername(),
                             post.getMember().getMbtitype(),
-                            post.getMember().getProfile_image().getStoreFileName(),
+                            post.getMember().getAvatar().getStoreFileName(),
                             post.getTitle(),
                             post.getOptionA(),
                             post.getOptionB(),
@@ -136,7 +136,7 @@ public class PostServiceImpl implements PostService{
                             post.getMember().getId(),
                             post.getMember().getUsername(),
                             post.getMember().getMbtitype(),
-                            post.getMember().getProfile_image().getStoreFileName(),
+                            post.getMember().getAvatar().getStoreFileName(),
                             post.getTitle(),
                             post.getOptionA(),
                             post.getOptionB(),
@@ -168,7 +168,7 @@ public class PostServiceImpl implements PostService{
                 getTopCommentADto.setCommentId(getTopCommentA.getId());
                 getTopCommentADto.setUsername(getTopCommentA.getMember().getUsername());
                 getTopCommentADto.setMbtiType(getTopCommentA.getMember().getMbtitype());
-                getTopCommentADto.setProfileImage(getTopCommentA.getMember().getProfile_image().getStoreFileName());
+                getTopCommentADto.setProfileImage(getTopCommentA.getMember().getAvatar().getStoreFileName());
                 getTopCommentADto.setComment(getTopCommentA.getContent());
                 getTopCommentADto.setSelectedOption(getTopCommentA.getSelectOption());
                 getTopCommentADto.setCountLikeComment(likeCommentRepository.countByCommentId(getTopCommentA.getId()));
@@ -187,7 +187,7 @@ public class PostServiceImpl implements PostService{
                 getTopCommentBDto.setCommentId(getTopCommentB.getId());
                 getTopCommentBDto.setUsername(getTopCommentB.getMember().getUsername());
                 getTopCommentBDto.setMbtiType(getTopCommentB.getMember().getMbtitype());
-                getTopCommentBDto.setProfileImage(getTopCommentB.getMember().getProfile_image().getStoreFileName());
+                getTopCommentBDto.setProfileImage(getTopCommentB.getMember().getAvatar().getStoreFileName());
                 getTopCommentBDto.setComment(getTopCommentB.getContent());
                 getTopCommentBDto.setSelectedOption(getTopCommentB.getSelectOption());
                 getTopCommentBDto.setCountLikeComment(likeCommentRepository.countByCommentId(getTopCommentB.getId()));
@@ -204,7 +204,7 @@ public class PostServiceImpl implements PostService{
                     post.getMember().getId(),
                     post.getMember().getUsername(),
                     post.getMember().getMbtitype(),
-                    post.getMember().getProfile_image().getStoreFileName(),
+                    post.getMember().getAvatar().getStoreFileName(),
                     post.getTitle(),
                     post.getOptionA(),
                     post.getOptionB(),

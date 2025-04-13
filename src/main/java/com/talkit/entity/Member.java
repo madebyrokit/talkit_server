@@ -22,7 +22,7 @@ public class Member {
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private ProfileImage profile_image;
+    private Avatar avatar;
 
     @Column(unique = true, nullable = false)
     private String username;

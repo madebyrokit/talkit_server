@@ -29,18 +29,19 @@ public class MemberServiceImpl implements MemberService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public MemberDto.Response getMemberInfo(String userEmail) {
-        log.info("getMemberInfo {}", userEmail);
-        Member member = memberRepository.findByEmail(userEmail).orElseThrow(
-                () -> new AppException("맴버를 찾지 못했습니다.", HttpStatus.NOT_FOUND));
+    public MemberDto.Response getMember(String email) {
 
-        MemberDto.Response response = new MemberDto.Response();
-        response.setId(member.getId());
-        response.setEmail(member.getEmail());
-        response.setUsername(member.getUsername());
-        response.setMbtiType(member.getMbtitype());
-        response.setProfileImage(member.getProfile_image().getStoreFileName());
-        return response;
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new AppException("member didn't found", HttpStatus.NOT_FOUND));
+
+        return new MemberDto.Response(
+                member.getId(),
+                member.getEmail(),
+                member.getUsername(),
+                member.getAvatar().getStoreFileName(),
+                member.getMbtitype(),
+                member.getOAuth()
+        );
     }
 
     @Override
@@ -52,8 +53,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public MemberDto.Response updateMember(MemberDto.Request request, String userEmail) {
-        log.info("서비스 1 {}", userEmail);
+    public MemberDto.Response updateMember(MemberDto.Register request, String userEmail) {
         Member member = memberRepository.findByEmail(userEmail).orElseThrow(
                 ()-> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)
         );
@@ -75,13 +75,15 @@ public class MemberServiceImpl implements MemberService{
 
         memberRepository.save(member);
 
-        MemberDto.Response response = new MemberDto.Response();
-        response.setId(member.getId());
-        response.setEmail(member.getEmail());
-        response.setUsername(member.getUsername());
-        response.setMbtiType(member.getMbtitype());
-        response.setProfileImage(member.getProfile_image().getStoreFileName());
-        return response;
+
+        return new MemberDto.Response(
+                member.getId(),
+                member.getEmail(),
+                member.getUsername(),
+                member.getAvatar().getStoreFileName(),
+                member.getMbtitype(),
+                member.getOAuth()
+        );
     }
 
     @Override

@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
                 comment.getMember().getUsername(),
                 comment.getContent(),
                 comment.getMember().getMbtitype(),
-                comment.getMember().getProfile_image().getStoreFileName(),
+                comment.getMember().getAvatar().getStoreFileName(),
                 comment.getSelectOption(),
                 likeCommentRepository.countByCommentId(comment.getId()),
                 comment.getCreatedAt()
@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
                 getResponse.setPostId(comment.getPost().getId());
                 getResponse.setCommentId(comment.getId());
                 getResponse.setUsername(comment.getMember().getUsername());
-                getResponse.setProfileImage(comment.getMember().getProfile_image().getStoreFileName());
+                getResponse.setProfileImage(comment.getMember().getAvatar().getStoreFileName());
                 getResponse.setMbtiType(comment.getMember().getMbtitype());
                 getResponse.setContent(comment.getContent());
                 getResponse.setOption(comment.getSelectOption());

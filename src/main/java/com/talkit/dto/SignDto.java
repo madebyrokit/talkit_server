@@ -12,8 +12,8 @@ public class SignDto {
     public static class SignUpRequest {
         private String email;
         private String password;
-        private String confirmPassword;
+        private String confirm_password;
         private String username;
-        private String mbtiType;
+        private String mbti_type;
     }
 }

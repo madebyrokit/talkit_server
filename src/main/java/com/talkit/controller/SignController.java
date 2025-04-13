@@ -10,22 +10,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@RestController
 @Slf4j
 @RequiredArgsConstructor
+@RestController
 public class SignController {
     private final SignService signService;
-    private final JwtProvider jwtProvider;
 
     @PostMapping("/register")
-    public ResponseEntity<?> sign(@RequestBody SignDto.SignUpRequest signUpRequest) {
-        signService.signup(signUpRequest);
-        return ResponseEntity.ok().body("OK");
+    public ResponseEntity<String> sign(@RequestBody SignDto.SignUpRequest signUpRequest) {
+        String email = signService.register(signUpRequest);
+        return ResponseEntity.ok().body(email);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody SignDto.LoginRequest loginRequest) {
-        String token = signService.getSign(loginRequest);
+        String token = signService.login(loginRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("authorization", "Bearer " + token);
         return ResponseEntity.ok().headers(headers).build();

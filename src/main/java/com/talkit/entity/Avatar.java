@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 @Entity
 @Getter
 @Setter
-public class ProfileImage {
+public class Avatar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class ProfileImage {
     @OneToOne
     private Member member;
 
-    public ProfileImage(String storeFileName, Member member) {
+    public Avatar(String storeFileName, Member member) {
         this.storeFileName = storeFileName;
         this.member = member;
     }

@@ -36,7 +36,7 @@ public class SearchServiceImpl implements SearchService{
                         post.getMember().getId(),
                         post.getMember().getUsername(),
                         post.getMember().getMbtitype(),
-                        post.getMember().getProfile_image().getStoreFileName(),
+                        post.getMember().getAvatar().getStoreFileName(),
                         post.getTitle(),
                         post.getOptionA(),
                         post.getOptionB(),

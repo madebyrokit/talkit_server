@@ -28,9 +28,7 @@ public class FileServiceImpl implements FileService{
 
     @Value("${file.upload-dir}")
     private String filePath;
-    public String getFullPath(String filename) {
-        return filePath + filename;
-    }
+
 
     @Override
     public String upload(String userEmail, MultipartFile multipartFile) {
@@ -39,9 +37,11 @@ public class FileServiceImpl implements FileService{
 
         String fileName = storeFile(multipartFile);
 
-        member.getProfile_image().setOriginalFileName(multipartFile.getName());
-        member.getProfile_image().setStoreFileName(fileName);
+        member.getAvatar().setOriginalFileName(multipartFile.getName());
+        member.getAvatar().setStoreFileName(fileName);
+
         memberRepository.save(member);
+
         return fileName;
     }
 
@@ -52,7 +52,7 @@ public class FileServiceImpl implements FileService{
         String storeFileName = UUID.randomUUID() + fileExtension;
 
         try {
-            multipartFile.transferTo(new File(getFullPath(storeFileName)));
+            multipartFile.transferTo(new File(filePath+storeFileName));
         } catch (IOException e) {
             throw new AppException("Avatar 저장 실패", HttpStatus.NOT_FOUND);
         }
