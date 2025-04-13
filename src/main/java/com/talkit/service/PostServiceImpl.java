@@ -161,40 +161,39 @@ public class PostServiceImpl implements PostService {
             post.incrementView();
             postRepository.save(post);
 
-            Comment getTopCommentA = commentRepository.findTopCommentA(optionalPost.get().getId());
-            CommentDto.getTopCommentA getTopCommentADto;
-            if (getTopCommentA != null) {
+            Comment findTopCommentA = commentRepository.findTopCommentA(optionalPost.get().getId());
+            CommentDto.TopCommentResponse getTopCommentADto;
 
-                getTopCommentADto = new CommentDto.getTopCommentA();
-                getTopCommentADto.setCommentId(getTopCommentA.getId());
-                getTopCommentADto.setUsername(getTopCommentA.getMember().getUsername());
-                getTopCommentADto.setMbtiType(getTopCommentA.getMember().getMbtitype());
-                getTopCommentADto.setProfileImage(getTopCommentA.getMember().getAvatar().getStoreFileName());
-                getTopCommentADto.setComment(getTopCommentA.getContent());
-                getTopCommentADto.setSelectedOption(getTopCommentA.getSelectOption());
-                getTopCommentADto.setCountLikeComment(likeCommentRepository.countByCommentId(getTopCommentA.getId()));
-                getTopCommentADto.setCreatedAtPost(getTopCommentA.getPost().getCreated_at());
-                getTopCommentADto.setCreatedAtComment(getTopCommentA.getCreatedAt());
+            if (findTopCommentA != null) {
+                getTopCommentADto = new CommentDto.TopCommentResponse(
+                        findTopCommentA.getId(),
+                        findTopCommentA.getMember().getUsername(),
+                        findTopCommentA.getMember().getMbtitype(),
+                        findTopCommentA.getMember().getAvatar().getStoreFileName(),
+                        findTopCommentA.getContent(),
+                        findTopCommentA.getOpinion(),
+                        likeCommentRepository.countByCommentId(findTopCommentA.getId()),
+                        findTopCommentA.getCreated_at()
+                );
+
 
             } else {
                 getTopCommentADto = null;
             }
 
-            Comment getTopCommentB = commentRepository.findTopCommentB(optionalPost.get().getId());
-            CommentDto.getTopCommentB getTopCommentBDto;
-            if (getTopCommentB != null) {
-
-                getTopCommentBDto = new CommentDto.getTopCommentB();
-                getTopCommentBDto.setCommentId(getTopCommentB.getId());
-                getTopCommentBDto.setUsername(getTopCommentB.getMember().getUsername());
-                getTopCommentBDto.setMbtiType(getTopCommentB.getMember().getMbtitype());
-                getTopCommentBDto.setProfileImage(getTopCommentB.getMember().getAvatar().getStoreFileName());
-                getTopCommentBDto.setComment(getTopCommentB.getContent());
-                getTopCommentBDto.setSelectedOption(getTopCommentB.getSelectOption());
-                getTopCommentBDto.setCountLikeComment(likeCommentRepository.countByCommentId(getTopCommentB.getId()));
-                getTopCommentBDto.setCreatedAtPost(getTopCommentB.getPost().getCreated_at());
-                getTopCommentBDto.setCreatedAtComment(getTopCommentB.getCreatedAt());
-
+            Comment findTopCommentB = commentRepository.findTopCommentB(optionalPost.get().getId());
+            CommentDto.TopCommentResponse getTopCommentBDto;
+            if (findTopCommentB != null) {
+                getTopCommentBDto = new CommentDto.TopCommentResponse(
+                        findTopCommentB.getId(),
+                        findTopCommentB.getMember().getUsername(),
+                        findTopCommentB.getMember().getMbtitype(),
+                        findTopCommentB.getMember().getAvatar().getStoreFileName(),
+                        findTopCommentB.getContent(),
+                        findTopCommentB.getOpinion(),
+                        likeCommentRepository.countByCommentId(findTopCommentB.getId()),
+                        findTopCommentB.getCreated_at()
+                );
             } else {
                 getTopCommentBDto = null;
             }
@@ -213,8 +212,8 @@ public class PostServiceImpl implements PostService {
                     post.getTotal_view(),
                     likePostRepository.countByPostId(post.getId()),
                     commentRepository.countByPostId(post.getId()),
-                    commentRepository.countByPostIdAndSelectOption(post.getId(), "A"),
-                    commentRepository.countByPostIdAndSelectOption(post.getId(), "B"),
+                    commentRepository.countByPostIdAndOpinion(post.getId(), "A"),
+                    commentRepository.countByPostIdAndOpinion(post.getId(), "B"),
                     getTopCommentADto,
                     getTopCommentBDto);
         } else {
@@ -224,8 +223,8 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public PostDto.Updated updatePost(PostDto.Updated updatePostRequest, String username) {
-        Post post = postRepository.findById(updatePostRequest.getPost_id()).orElseThrow(() ->
+    public PostDto.Updated updatePost(Long post_id, PostDto.Updated updatePostRequest, String username) {
+        Post post = postRepository.findById(post_id).orElseThrow(() ->
                 new AppException("the post can not be found", HttpStatus.NOT_FOUND)
         );
 
@@ -271,8 +270,8 @@ public class PostServiceImpl implements PostService {
     public PostDto.logicResponse barchart() {
         Post randomPost = postRepository.getRamdomPost();
 
-        Long getCommentCountByOptionA = commentRepository.countByPostIdAndSelectOption(randomPost.getId(), "A");
-        Long getCommentCountByOptionB = commentRepository.countByPostIdAndSelectOption(randomPost.getId(), "B");
+        Long getCommentCountByOptionA = commentRepository.countByPostIdAndOpinion(randomPost.getId(), "A");
+        Long getCommentCountByOptionB = commentRepository.countByPostIdAndOpinion(randomPost.getId(), "B");
 
         PostDto.logicResponse logicResponse = new PostDto.logicResponse();
         logicResponse.setPost_id(randomPost.getId());

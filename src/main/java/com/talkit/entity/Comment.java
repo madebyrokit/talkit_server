@@ -10,11 +10,10 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@Entity
 public class Comment {
 
     @Id
@@ -34,16 +33,19 @@ public class Comment {
     private List<LikeComment> likeComment;
 
     @Column
-    private String selectOption;
+    private String opinion;
 
     @Column
-    private Date createdAt;
+    private Date created_at;
 
-    public Comment(String content, Post post, Member member, String selectOption, Date createdAt) {
+    public Comment(String content, Post post, Member member, String opinion, Date created_at) {
         this.content = content;
         this.post = post;
         this.member = member;
-        this.selectOption = selectOption;
-        this.createdAt = createdAt;
+        this.opinion = opinion;
+        this.created_at = created_at;
     }
 }
+
+
+

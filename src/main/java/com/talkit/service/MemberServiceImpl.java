@@ -119,8 +119,8 @@ public class MemberServiceImpl implements MemberService{
             MemberDto.ResponseCommentList responseComment = new MemberDto.ResponseCommentList();
             responseComment.setCommentId(comment.getId());
             responseComment.setContent(comment.getContent());
-            responseComment.setOpinion(comment.getSelectOption());
-            responseComment.setCreatedAt(comment.getCreatedAt());
+            responseComment.setOpinion(comment.getOpinion());
+            responseComment.setCreatedAt(comment.getCreated_at());
             responseCommentList.add(responseComment);
         }
         return responseCommentList;
@@ -156,7 +156,7 @@ public class MemberServiceImpl implements MemberService{
             MemberDto.ResponseLikedCommentList responseLikedComment = new MemberDto.ResponseLikedCommentList();
             responseLikedComment.setCommentId(likeComment.getComment().getId());
             responseLikedComment.setContent(likeComment.getComment().getContent());
-            responseLikedComment.setCreatedAt(likeComment.getComment().getCreatedAt());
+            responseLikedComment.setCreatedAt(likeComment.getComment().getCreated_at());
             responseLikedCommentList.add(responseLikedComment);
         }
         return responseLikedCommentList;

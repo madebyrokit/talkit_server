@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
         Member member = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
-        Post post = postRepository.findById(createRequest.getPostId())
+        Post post = postRepository.findById(createRequest.getPost_id())
                 .orElseThrow(() -> new AppException("게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         Comment comment = new Comment(
@@ -57,54 +57,50 @@ public class CommentServiceImpl implements CommentService {
                 comment.getContent(),
                 comment.getMember().getMbtitype(),
                 comment.getMember().getAvatar().getStoreFileName(),
-                comment.getSelectOption(),
+                comment.getOpinion(),
                 likeCommentRepository.countByCommentId(comment.getId()),
-                comment.getCreatedAt()
+                comment.getCreated_at()
         );
     }
 
     @Override
-    public List<CommentDto.GetResponse> getCommentList(int page, int size, Long postId) {
+    public List<CommentDto.Response> getCommentList(int page, int size, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new AppException("게시글을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
         PageRequest pageRequest = PageRequest.of(page, size);
         List<Comment> commentList = commentRepository.getCommentList(pageRequest, post.getId());
 
+        List<CommentDto.Response> responseList = new ArrayList<>();
 
-        List<CommentDto.GetResponse> getResponseList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            CommentDto.Response response = new CommentDto.Response(
+                    comment.getPost().getId(),
+                    comment.getId(),
+                    comment.getContent(),
+                    comment.getOpinion(),
+                    comment.getMember().getUsername(),
+                    comment.getMember().getAvatar().getStoreFileName(),
+                    comment.getMember().getMbtitype(),
+                    likeCommentRepository.countByCommentId(comment.getId()),
+                    comment.getCreated_at()
 
-        if (commentList != null ) {
-            for (Comment comment : commentList) {
-                CommentDto.GetResponse getResponse = new CommentDto.GetResponse();
-                getResponse.setPostId(comment.getPost().getId());
-                getResponse.setCommentId(comment.getId());
-                getResponse.setUsername(comment.getMember().getUsername());
-                getResponse.setProfileImage(comment.getMember().getAvatar().getStoreFileName());
-                getResponse.setMbtiType(comment.getMember().getMbtitype());
-                getResponse.setContent(comment.getContent());
-                getResponse.setOption(comment.getSelectOption());
-                getResponse.setLike(likeCommentRepository.countByCommentId(comment.getId()));
-                getResponse.setCreatedAt(comment.getCreatedAt());
-
-                getResponseList.add(getResponse);
-            }
-            return getResponseList;
-        } else {
-            return null;
+            );
+            responseList.add(response);
         }
+        return responseList;
     }
 
     @Override
-    public CommentDto.UpdateResponse updateComment(CommentDto.UpdateRequest updateCommentRequest, String username) {
-        Comment comment = commentRepository.findById(updateCommentRequest.getCommentId())
+    public CommentDto.Update updateComment(CommentDto.Update updateCommentRequest, String username) {
+        Comment comment = commentRepository.findById(updateCommentRequest.getComment_id())
                 .orElseThrow(() -> new AppException("댓글을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
         comment.setContent(updateCommentRequest.getContent());
-        comment.setSelectOption(updateCommentRequest.getSelectedOpinion());
+        comment.setOpinion(updateCommentRequest.getOpinion());
 
         commentRepository.save(comment);
-        return new CommentDto.UpdateResponse(comment.getId(), comment.getContent(), comment.getSelectOption());
+        return new CommentDto.Update(comment.getId(), comment.getContent(), comment.getOpinion());
     }
 
     @Override
@@ -116,7 +112,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Long toggleLike(Long commentId, String userEmail) {
+    public Long switchLike(Long commentId, String userEmail) {
         Member member = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new AppException("맴버를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 

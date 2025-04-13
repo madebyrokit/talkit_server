@@ -38,8 +38,8 @@ public class PostController {
     }
 
     @PutMapping
-    public ResponseEntity<PostDto.Updated> updatePost(@RequestBody PostDto.Updated updatePostRequest, Authentication authentication) {
-        PostDto.Updated updatedPost = postService.updatePost(updatePostRequest, authentication.getName());
+    public ResponseEntity<PostDto.Updated> updatePost(@RequestParam Long post_id, @RequestBody PostDto.Updated updatePostRequest, Authentication authentication) {
+        PostDto.Updated updatedPost = postService.updatePost(post_id, updatePostRequest, authentication.getName());
         return ResponseEntity.ok().body(updatedPost);
     }
 

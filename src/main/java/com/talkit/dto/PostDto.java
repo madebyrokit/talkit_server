@@ -46,8 +46,8 @@ public class PostDto {
         private Long total_comments;
         private Long total_opinion_a;
         private Long total_opinion_b;
-        private CommentDto.getTopCommentA top_comment_a;
-        private CommentDto.getTopCommentB top_comment_b;
+        private CommentDto.TopCommentResponse top_comment_a;
+        private CommentDto.TopCommentResponse top_comment_b;
     }
 
     @Data

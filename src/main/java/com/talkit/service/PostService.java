@@ -13,7 +13,7 @@ public interface PostService {
     PostDto.PostResponse createPost(PostDto.CreatedPostRequest createRequest, String userEmail);
     List<PostDto.PostResponse> getPostList(int page, int size, String sort);
     PostDto.Response getPost(Long postId);
-    PostDto.Updated updatePost(PostDto.Updated updatePostRequest, String userEmail);
+    PostDto.Updated updatePost(Long post_id, PostDto.Updated updatePostRequest, String userEmail);
     void deletePost(Long postId, String userEmail);
     Long switchLike(Long post_id, String userEmail);
     PostDto.logicResponse barchart();

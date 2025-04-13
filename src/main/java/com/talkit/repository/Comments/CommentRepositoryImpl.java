@@ -39,7 +39,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
                 .from(qComment)
                 .leftJoin(qLikeComment)
                 .on(qComment.id.eq(qLikeComment.comment.id)) // post.id와 like_post.post_id를 매칭
-                .where(qComment.selectOption.eq("A").and(qComment.post.id.eq(postId)))
+                .where(qComment.opinion.eq("A").and(qComment.post.id.eq(postId)))
                 .groupBy(qComment.id)
                 .having(qLikeComment.id.count().gt(0))
                 .orderBy(qLikeComment.id.count().desc()) // like_post.id의 개수를 내림차순으로 정렬
@@ -57,7 +57,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
                 .from(qComment)
                 .leftJoin(qLikeComment)
                 .on(qComment.id.eq(qLikeComment.comment.id)) // post.id와 like_post.post_id를 매칭
-                .where(qComment.selectOption.eq("B").and(qComment.post.id.eq(postId)))
+                .where(qComment.opinion.eq("B").and(qComment.post.id.eq(postId)))
                 .groupBy(qComment.id)
                 .having(qLikeComment.id.count().gt(0))
                 .orderBy(qLikeComment.id.count().desc()) // like_post.id의 개수를 내림차순으로 정렬

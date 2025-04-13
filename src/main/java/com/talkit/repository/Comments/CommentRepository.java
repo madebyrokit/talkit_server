@@ -10,6 +10,6 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long>, CommentRepositoryCustom {
     List<Comment> findByMemberId(Long memberId);
     Long countByPostId(Long postId);
-    Long countByPostIdAndSelectOption(Long postId, String selectOption);
+    Long countByPostIdAndOpinion(Long postId, String opinion);
 
 }

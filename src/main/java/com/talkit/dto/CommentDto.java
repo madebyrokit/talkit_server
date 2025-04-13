@@ -1,12 +1,14 @@
 package com.talkit.dto;
 
 import lombok.*;
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.Date;
 
 public class CommentDto{
     @Data
     public static class CreateRequest {
-        private Long postId;
+        private Long post_id;
         private String content;
         private String opinion;
     }
@@ -14,77 +16,49 @@ public class CommentDto{
     @Data
     @AllArgsConstructor
     public static class CreateResponse {
-        private Long postId;
-        private Long commentId;
+        private Long post_id;
+        private Long comment_id;
         private String username;
         private String content;
-        private String mbtiType;
-        private String profileImage;
-        private String option;
-        private Long like;
-        private Date createdAt;
+        private String mbti_type;
+        private String avatar;
+        private String opinion;
+        private Long total_liked;
+        private Date created_at;
     }
 
-    @Data
-    public static class GetResponse {
-        private Long postId;
-        private Long commentId;
-        private String username;
-        private String profileImage;
-        private String mbtiType;
-        private String content;
-        private String option;
-        private Long like;
-        private Date createdAt;
-    }
-
-    @Data
-    public static class DeleteRequest {
-        private Long commentId;
-    }
-
-    @Data
-    public static class UpdateRequest {
-        private Long commentId;
-        private String content;
-        private String selectedOpinion;
-    }
     @Data
     @AllArgsConstructor
-    public static class UpdateResponse {
-        private Long commentId;
+    public static class Response {
+        private Long pos_id;
+        private Long comment_id;
+        private String content;
+        private String opinion;
+        private String username;
+        private String avatar;
+        private String mbti_type;
+        private Long total_liked;
+        private Date created_at;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Update {
+        private Long comment_id;
         private String content;
         private String opinion;
     }
 
     @Data
-    public static class LikeRequest {
-        private Long commentId;
-    }
-
-    @Data
-    public static class getTopCommentA {
-        private Long commentId;
+    @AllArgsConstructor
+    public static class TopCommentResponse {
+        private Long comment_id;
         private String username;
-        private String mbtiType;
-        private String profileImage;
+        private String mbti_type;
+        private String avatar;
         private String comment;
-        private String selectedOption;
-        private Long countLikeComment;
-        private Date createdAtPost;
-        private Date createdAtComment;
-    }
-
-    @Data
-    public static class getTopCommentB {
-        private Long commentId;
-        private String username;
-        private String mbtiType;
-        private String profileImage;
-        private String comment;
-        private String selectedOption;
-        private Long countLikeComment;
-        private Date createdAtPost;
-        private Date createdAtComment;
+        private String opinion;
+        private Long total_liked_comment;
+        private Date created_at_comment;
     }
 }
