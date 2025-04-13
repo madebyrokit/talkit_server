@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,18 +16,20 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class SignController {
     private final SignService signService;
+    private final JwtProvider jwtProvider;
 
     @PostMapping("/up")
-    public ResponseEntity<?> signUp(@RequestBody SignDto.SignUpRequest signUpRequest) {
+    public ResponseEntity<?> sign(@RequestBody SignDto.SignUpRequest signUpRequest) {
+        log.info("가입");
         signService.signup(signUpRequest);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/in")
     public ResponseEntity<String> login(@RequestBody SignDto.LoginRequest loginRequest) {
-        HttpHeaders headers = new HttpHeaders();
         String token = signService.getSign(loginRequest);
-        headers.add("Authorization", "Bearer " + token);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("authorization", "Bearer " + token);
         return ResponseEntity.ok().headers(headers).build();
     }
 }
