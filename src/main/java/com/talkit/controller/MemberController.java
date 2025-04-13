@@ -58,20 +58,24 @@ public class MemberController {
     // detail
     @GetMapping("/posts")
     public ResponseEntity<List<MemberDto.ResponsePostList>> getPostListByMember(Authentication authentication) {
-        return ResponseEntity.ok().body(memberService.getPostListByMember(authentication.getName()));
+        String email = authentication.getName();
+        return ResponseEntity.ok().body(memberService.getPostListByMember(email));
     }
     @GetMapping("/liked/posts")
     public ResponseEntity<List<MemberDto.ResponseLikedPostList>> getLikedPostListByMember(Authentication authentication) {
-        return ResponseEntity.ok().body(memberService.getLikedPostListByMember(authentication.getName()));
+        String email = authentication.getName();
+        return ResponseEntity.ok().body(memberService.getLikedPostListByMember(email));
 
     }
     @GetMapping("/comments")
     public ResponseEntity<List<MemberDto.ResponseCommentList>> getCommentListByMember(Authentication authentication) {
-        return ResponseEntity.ok().body(memberService.getCommentListByMember(authentication.getName()));
+        String email = authentication.getName();
+        return ResponseEntity.ok().body(memberService.getCommentListByMember(email));
     }
     @GetMapping("/liked/comments")
     public ResponseEntity<List<MemberDto.ResponseLikedCommentList>> getCLikedCommentPostListByMember(Authentication authentication) {
-        return ResponseEntity.ok().body(memberService.getLikedCommentListByMember(authentication.getName()));
+        String email = authentication.getName();
+        return ResponseEntity.ok().body(memberService.getLikedCommentListByMember(email));
     }
 }
 

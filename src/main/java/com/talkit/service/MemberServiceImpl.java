@@ -45,16 +45,16 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public void deleteMember(String userEmail) {
-        Member member = memberRepository.findByEmail(userEmail).orElseThrow(
+    public void deleteMember(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
                 ()-> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         memberRepository.delete(member);
     }
 
     @Override
-    public MemberDto.Response updateMember(MemberDto.Register request, String userEmail) {
-        Member member = memberRepository.findByEmail(userEmail).orElseThrow(
+    public MemberDto.Response updateMember(MemberDto.Register request, String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
                 ()-> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)
         );
 
@@ -87,8 +87,8 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<MemberDto.ResponsePostList> getPostListByMember(String userEmail) {
-        Member member = memberRepository.findByEmail(userEmail).orElseThrow(
+    public List<MemberDto.ResponsePostList> getPostListByMember(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)
         );
 
@@ -108,8 +108,8 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<MemberDto.ResponseCommentList> getCommentListByMember(String userEmail) {
-        Member member = memberRepository.findByEmail(userEmail).orElseThrow(
+    public List<MemberDto.ResponseCommentList> getCommentListByMember(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         List<Comment> commentList = commentRepository.findByMemberId(member.getId());
@@ -127,8 +127,8 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<MemberDto.ResponseLikedPostList> getLikedPostListByMember(String userEmail) {
-        Member member = memberRepository.findByEmail(userEmail).orElseThrow(
+    public List<MemberDto.ResponseLikedPostList> getLikedPostListByMember(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         List<LikePost> likePostList = likePostRepository.findByMemberId(member.getId());
@@ -145,8 +145,8 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<MemberDto.ResponseLikedCommentList> getLikedCommentListByMember(String userEmail) {
-        Member member = memberRepository.findByEmail(userEmail).orElseThrow(
+    public List<MemberDto.ResponseLikedCommentList> getLikedCommentListByMember(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new AppException("맴버를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         List<LikeComment> likeCommentList = likeCommentRepository.findByMemberId(member.getId());
