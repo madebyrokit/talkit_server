@@ -22,22 +22,22 @@ public class Post {
     private String title;
 
     @Column
-    private String optionA;
+    private String option_a;
 
     @Column
-    private String optionB;
+    private String option_b;
 
     @ManyToOne
     private Member member;
 
     @Column
-    private Date createdAt;
+    private Date created_at;
 
     @Column
-    private Long view;
+    private Long total_view;
 
     public void incrementView() {
-        this.view++;
+        this.total_view++;
     }
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

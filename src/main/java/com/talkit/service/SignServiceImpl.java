@@ -41,7 +41,7 @@ public class SignServiceImpl implements SignService {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(signUpRequest.getEmail());
 
-        if (!optionalMember.isEmpty()) {
+        if (optionalMember.isPresent()) {
             throw new AppException("This member already exists", HttpStatus.NOT_FOUND);
         } else if (!signUpRequest.getConfirm_password().matches(signUpRequest.getPassword())) {
             throw new AppException("This passwords do not match", HttpStatus.NOT_FOUND);
@@ -52,8 +52,8 @@ public class SignServiceImpl implements SignService {
         member.setEmail(signUpRequest.getEmail());
         member.setMbtitype(signUpRequest.getMbti_type());
         member.setUsername(signUpRequest.getUsername());
-        member.setAvatar(new Avatar("user.png", member));
-        member.setOAuth("");
+        member.setAvatar(new Avatar("default.png", member));
+        member.setOAuth("default");
         memberRepository.save(member);
         log.info("{} is registered ", member.getEmail());
         return member.getEmail();

@@ -42,7 +42,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return jpaQueryFactory
                 .select(qPost)
                 .from(qPost)
-                .orderBy(qPost.view.desc())
+                .orderBy(qPost.total_view.desc())
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
@@ -83,7 +83,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         List<Post> recentPosts = jpaQueryFactory
                 .selectFrom(qPost)
-                .orderBy(qPost.createdAt.desc()) // 최신순으로 정렬
+                .orderBy(qPost.created_at.desc()) // 최신순으로 정렬
                 .limit(10) // 최근 10개만 가져오기
                 .fetch();
 

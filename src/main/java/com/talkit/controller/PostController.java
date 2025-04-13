@@ -16,18 +16,18 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController {
 
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostDto.CreateResponse> createPost(@RequestBody PostDto.CreateRequest createRequest, Authentication authentication) {
-        return ResponseEntity.ok().body(postService.createPost(createRequest, authentication.getName()));
+    public ResponseEntity<PostDto.PostResponse> createPost(@RequestBody PostDto.CreatedPostRequest createdPostRequest, Authentication authentication) {
+        return ResponseEntity.ok().body(postService.createPost(createdPostRequest, authentication.getName()));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<PostDto.ListResponse>> getPostList(@RequestParam int page, @RequestParam int size, @RequestParam String sort) {
+    public ResponseEntity<List<PostDto.PostResponse>> getPostList(@RequestParam int page, @RequestParam int size, @RequestParam String sort) {
         return ResponseEntity.ok().body(postService.getPostList(page, size, sort));
     }
 

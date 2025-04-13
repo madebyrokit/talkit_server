@@ -54,7 +54,7 @@ public class FileServiceImpl implements FileService{
         try {
             multipartFile.transferTo(new File(filePath+storeFileName));
         } catch (IOException e) {
-            throw new AppException("Avatar 저장 실패", HttpStatus.NOT_FOUND);
+            throw new AppException("Failed to upload avatar", HttpStatus.NOT_FOUND);
         }
 
         return storeFileName;
@@ -66,7 +66,7 @@ public class FileServiceImpl implements FileService{
             Path path = Paths.get(filePath).resolve(fileName).normalize();
             return new UrlResource(path.toUri());
         } catch (MalformedURLException e) {
-            throw new AppException("파일을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+            throw new AppException("did not find files", HttpStatus.NOT_FOUND);
         }
     }
 }

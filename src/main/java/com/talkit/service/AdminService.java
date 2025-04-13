@@ -14,7 +14,7 @@ import java.util.List;
 public class AdminService {
     private final MemberRepository memberRepository;
 
-    public List<MemberDto.Response> getListMember() {
+    public List<MemberDto.Response> getMemberList() {
         List<Member> ListMember = memberRepository.findAll();
 
         List<MemberDto.Response> responseList = new ArrayList<>();

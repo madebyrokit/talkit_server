@@ -19,7 +19,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/members")
-    public ResponseEntity<?> getListMember() {
-        return ResponseEntity.ok().body(adminService.getListMember());
+    public ResponseEntity<?> getMemberList() {
+        return ResponseEntity.ok().body(adminService.getMemberList());
     }
 }

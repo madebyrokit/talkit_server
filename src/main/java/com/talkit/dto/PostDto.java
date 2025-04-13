@@ -1,13 +1,12 @@
 package com.talkit.dto;
 
 import lombok.*;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.Date;
 
 public class PostDto {
     @Data
-    public static class CreateRequest {
+    public static class CreatedPostRequest {
         private String title;
         private String opinionA;
         private String opinionB;
@@ -15,88 +14,71 @@ public class PostDto {
 
     @Data
     @AllArgsConstructor
-    public static class CreateResponse {
-        private Long postId;
-        private Long memberId;
+    public static class PostResponse {
+        private Long post_id;
+        private Long member_id;
         private String username;
-        private String mbtiType;
-        private String profileImage;
+        private String mbti_type;
+        private String avatar;
         private String title;
-        private String opinionA;
-        private String opinionB;
-        private Long countComment;
-        private Date createdAt;
-        private Long view;
-        private Long like;
+        private String opinion_a;
+        private String opinion_b;
+        private Date created_at;
+        private Long total_views;
+        private Long total_likes;
+        private Long total_comments;
     }
 
     @Data
     @AllArgsConstructor
     public static class Response {
-        private Long postId;
-        private Long memberId;
+        private Long post_id;
+        private Long member_id;
         private String username;
-        private String mbtiType;
-        private String profileImage;
+        private String mbti_type;
+        private String avatar;
         private String title;
-        private String opinionA;
-        private String opinionB;
-        private Date createdAt;
+        private String opinion_a;
+        private String opinion_b;
+        private Date created_at;
         private Long view;
         private Long like;
-        private Long countComment;
-        private Long countCommentByOptionA;
-        private Long countCommentByOptionB;
-        private CommentDto.getTopCommentA getTopCommentA;
-        private CommentDto.getTopCommentB getTopCommentB;
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class ListResponse {
-        private Long postId;
-        private Long memberId;
-        private String username;
-        private String mbtiType;
-        private String profileImage;
-        private String title;
-        private String opinionA;
-        private String opinionB;
-        private Long countComment;
-        private Date createdAt;
-        private Long view;
-        private Long like;
+        private Long total_comments;
+        private Long total_opinion_a;
+        private Long total_opinion_b;
+        private CommentDto.getTopCommentA top_comment_a;
+        private CommentDto.getTopCommentB top_comment_b;
     }
 
     @Data
     public static class UpdateRequest {
-        private Long postId;
+        private Long post_id;
         private String title;
-        private String opinionA;
-        private String opinionB;
+        private String opinion_a;
+        private String opinion_b;
     }
 
     @Data
     @AllArgsConstructor
     public static class UpdateResponse {
-        private Long postId;
+        private Long post_id;
         private String title;
-        private String opinionA;
-        private String opinionB;
+        private String opinion_a;
+        private String opinion_b;
     }
 
     @Data
     public static class LikePostRequest {
-        private Long postId;
+        private Long post_id;
     }
 
     @Data
     public static class logicResponse {
-        private Long postId;
+        private Long post_id;
         private String title;
-        private String optionA;
-        private String optionB;
-        private Long countByOptionA;
-        private Long countByOptionB;
+        private String opinion_a;
+        private String opinion_b;
+        private Long total_opinion_a;
+        private Long total_opinion_b;
     }
 }
