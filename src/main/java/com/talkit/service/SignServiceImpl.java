@@ -47,14 +47,18 @@ public class SignServiceImpl implements SignService {
             throw new AppException("This passwords do not match", HttpStatus.NOT_FOUND);
         }
 
-        Member member = new Member();
-        member.setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
-        member.setEmail(signUpRequest.getEmail());
-        member.setMbtitype(signUpRequest.getMbti_type());
-        member.setUsername(signUpRequest.getUsername());
-        member.setAvatar(new Avatar("default.png", member));
-        member.setOAuth("default");
+        Member member = new Member(
+                signUpRequest.getEmail(),
+                bCryptPasswordEncoder.encode(signUpRequest.getPassword()),
+                signUpRequest.getUsername(),
+                signUpRequest.getMbti_type(),
+                "default"
+        );
+
+        member.setAvatar(new Avatar("default.jpg", member));
+
         memberRepository.save(member);
+
         log.info("{} is registered ", member.getEmail());
         return member.getEmail();
     }

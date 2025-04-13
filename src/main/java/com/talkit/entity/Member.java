@@ -42,4 +42,12 @@ public class Member {
     private List<Comment> commentList;
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<LikeComment> likeCommentList;
+
+    public Member(String email, String password, String username, String mbtitype, String oAuth) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.mbtitype = mbtitype;
+        this.oAuth = oAuth;
+    }
 }

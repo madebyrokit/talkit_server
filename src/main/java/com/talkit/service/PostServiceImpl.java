@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
@@ -223,16 +224,17 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
-    public PostDto.UpdateResponse updatePost(PostDto.UpdateRequest updatePostRequest, String username) {
-        Post post = postRepository.findById(updatePostRequest.getPost_id()).orElseThrow(()->
-                new AppException("게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)
+    public PostDto.Updated updatePost(PostDto.Updated updatePostRequest, String username) {
+        Post post = postRepository.findById(updatePostRequest.getPost_id()).orElseThrow(() ->
+                new AppException("the post can not be found", HttpStatus.NOT_FOUND)
         );
+
         post.setTitle(updatePostRequest.getTitle());
         post.setOption_a(updatePostRequest.getOpinion_a());
         post.setOption_b(updatePostRequest.getOpinion_b());
 
         postRepository.save(post);
-        return new PostDto.UpdateResponse(post.getId(), post.getTitle(), post.getOption_a(), post.getOption_b());
+        return new PostDto.Updated(post.getId(), post.getTitle(), post.getOption_a(), post.getOption_b());
     }
 
     @Override
@@ -244,11 +246,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long toggleToLikePost(PostDto.LikePostRequest likePostRequest, String userEmail) {
+    public Long switchLike(@RequestParam Long post_id, String userEmail) {
         Member member = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new AppException("맴버가 존재하지 않습니다.", HttpStatus.NOT_FOUND));
 
-        Post post = postRepository.findById(likePostRequest.getPost_id())
+        Post post = postRepository.findById(post_id)
                 .orElseThrow(() -> new AppException("게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         Optional<LikePost> optionalLikePost = likePostRepository.findByMember_IdAndPostId(member.getId(), post.getId());

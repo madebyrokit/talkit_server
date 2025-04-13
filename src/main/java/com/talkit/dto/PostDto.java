@@ -51,25 +51,12 @@ public class PostDto {
     }
 
     @Data
-    public static class UpdateRequest {
-        private Long post_id;
-        private String title;
-        private String opinion_a;
-        private String opinion_b;
-    }
-
-    @Data
     @AllArgsConstructor
-    public static class UpdateResponse {
+    public static class Updated {
         private Long post_id;
         private String title;
         private String opinion_a;
         private String opinion_b;
-    }
-
-    @Data
-    public static class LikePostRequest {
-        private Long post_id;
     }
 
     @Data

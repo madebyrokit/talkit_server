@@ -32,34 +32,30 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<PostDto.Response> getPost(@RequestParam Long postid) {
-        PostDto.Response postResponse = postService.getPost(postid);
-        if (postResponse != null) {
-            return ResponseEntity.ok(postResponse);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<PostDto.Response> getPost(@RequestParam Long post_id) {
+        PostDto.Response postResponse = postService.getPost(post_id);
+        return ResponseEntity.ok(postResponse);
     }
 
     @PutMapping
-    public void updatePost(@RequestBody PostDto.UpdateRequest updatePostRequest, Authentication authentication) {
-        postService.updatePost(updatePostRequest, authentication.getName());
+    public ResponseEntity<PostDto.Updated> updatePost(@RequestBody PostDto.Updated updatePostRequest, Authentication authentication) {
+        PostDto.Updated updatedPost = postService.updatePost(updatePostRequest, authentication.getName());
+        return ResponseEntity.ok().body(updatedPost);
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deletePost(@RequestParam Long postid, Authentication authentication) {
-        postService.deletePost(postid, authentication.getName());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deletePost(@RequestParam Long post_id, Authentication authentication) {
+        postService.deletePost(post_id, authentication.getName());
+        return ResponseEntity.ok().body("OK");
     }
 
-    @PostMapping("/like")
-    public ResponseEntity<Long> toggleLike(@RequestBody PostDto.LikePostRequest likePostRequest, Authentication authentication) {
-        return ResponseEntity.ok().body(postService.toggleToLikePost(likePostRequest, authentication.getName()));
+    @PostMapping("/liked")
+    public ResponseEntity<Long> switchLike(@RequestParam Long post_id, Authentication authentication) {
+        return ResponseEntity.ok().body(postService.switchLike(post_id, authentication.getName()));
     }
 
     @GetMapping("/barchart")
     public ResponseEntity<PostDto.logicResponse> barchart() {
-
         return ResponseEntity.ok().body(postService.barchart());
     }
 }
