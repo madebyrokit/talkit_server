@@ -30,7 +30,7 @@ public class CommentDto{
     @Data
     @AllArgsConstructor
     public static class Response {
-        private Long pos_id;
+        private Long post_id;
         private Long comment_id;
         private String content;
         private String opinion;
