@@ -31,7 +31,7 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getPostList(page, size, sort));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<PostDto.Response> getPost(@RequestParam Long post_id) {
         PostDto.Response postResponse = postService.getPost(post_id);
         return ResponseEntity.ok(postResponse);

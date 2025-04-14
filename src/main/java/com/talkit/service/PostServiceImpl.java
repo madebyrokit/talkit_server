@@ -41,8 +41,8 @@ public class PostServiceImpl implements PostService {
         Post post = new Post(
                 null,
                 createRequest.getTitle(),
-                createRequest.getOpinionA(),
-                createRequest.getOpinionB(),
+                createRequest.getOpinion_a(),
+                createRequest.getOpinion_b(),
                 member,
                 new Date(),
                 0L,
@@ -87,8 +87,8 @@ public class PostServiceImpl implements PostService {
                             post.getOption_a(),
                             post.getOption_b(),
                             post.getCreated_at(),
-                            commentRepository.countByPostId(post.getId()),
                             post.getTotal_view(),
+                            commentRepository.countByPostId(post.getId()),
                             likePostRepository.countByPostId(post.getId())
                     ))
                     .collect(Collectors.toList());
@@ -106,8 +106,8 @@ public class PostServiceImpl implements PostService {
                             post.getOption_a(),
                             post.getOption_b(),
                             post.getCreated_at(),
-                            commentRepository.countByPostId(post.getId()),
                             post.getTotal_view(),
+                            commentRepository.countByPostId(post.getId()),
                             likePostRepository.countByPostId(post.getId())
                     ))
                     .collect(Collectors.toList());
@@ -124,8 +124,8 @@ public class PostServiceImpl implements PostService {
                             post.getOption_a(),
                             post.getOption_b(),
                             post.getCreated_at(),
-                            commentRepository.countByPostId(post.getId()),
                             post.getTotal_view(),
+                            commentRepository.countByPostId(post.getId()),
                             likePostRepository.countByPostId(post.getId())
                     ))
                     .collect(Collectors.toList());
@@ -142,8 +142,8 @@ public class PostServiceImpl implements PostService {
                             post.getOption_a(),
                             post.getOption_b(),
                             post.getCreated_at(),
-                            commentRepository.countByPostId(post.getId()),
                             post.getTotal_view(),
+                            commentRepository.countByPostId(post.getId()),
                             likePostRepository.countByPostId(post.getId())
                     ))
                     .collect(Collectors.toList());

@@ -8,8 +8,8 @@ public class PostDto {
     @Data
     public static class CreatedPostRequest {
         private String title;
-        private String opinionA;
-        private String opinionB;
+        private String opinion_a;
+        private String opinion_b;
     }
 
     @Data
