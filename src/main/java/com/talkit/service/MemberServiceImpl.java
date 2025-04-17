@@ -99,9 +99,9 @@ public class MemberServiceImpl implements MemberService{
             MemberDto.ResponsePostList responsePost = new MemberDto.ResponsePostList();
             responsePost.setPostId(post.getId());
             responsePost.setTitle(post.getTitle());
-            responsePost.setOpinionA(post.getOption_a());
-            responsePost.setOpinionB(post.getOption_b());
-            responsePost.setCreatedAt(post.getCreated_at());
+            responsePost.setOpinion_a(post.getOption_a());
+            responsePost.setOpinion_b(post.getOption_b());
+            responsePost.setCreated_at(post.getCreated_at());
             responsePostList.add(responsePost);
         }
         return responsePostList;
@@ -117,10 +117,10 @@ public class MemberServiceImpl implements MemberService{
 
         for (Comment comment : commentList) {
             MemberDto.ResponseCommentList responseComment = new MemberDto.ResponseCommentList();
-            responseComment.setCommentId(comment.getId());
+            responseComment.setComment_id(comment.getId());
             responseComment.setContent(comment.getContent());
             responseComment.setOpinion(comment.getOpinion());
-            responseComment.setCreatedAt(comment.getCreated_at());
+            responseComment.setCreated_at(comment.getCreated_at());
             responseCommentList.add(responseComment);
         }
         return responseCommentList;
@@ -136,9 +136,9 @@ public class MemberServiceImpl implements MemberService{
 
         for (LikePost likePost : likePostList) {
             MemberDto.ResponseLikedPostList responseLikedPost = new MemberDto.ResponseLikedPostList();
-            responseLikedPost.setPostId(likePost.getPost().getId());
+            responseLikedPost.setPost_id(likePost.getPost().getId());
             responseLikedPost.setTitle(likePost.getPost().getTitle());
-            responseLikedPost.setCreatedAt(likePost.getPost().getCreated_at());
+            responseLikedPost.setCreated_at(likePost.getPost().getCreated_at());
             responseLikedPostList.add(responseLikedPost);
         }
         return responseLikedPostList;
@@ -154,9 +154,9 @@ public class MemberServiceImpl implements MemberService{
 
         for (LikeComment likeComment : likeCommentList) {
             MemberDto.ResponseLikedCommentList responseLikedComment = new MemberDto.ResponseLikedCommentList();
-            responseLikedComment.setCommentId(likeComment.getComment().getId());
+            responseLikedComment.setComment_id(likeComment.getComment().getId());
             responseLikedComment.setContent(likeComment.getComment().getContent());
-            responseLikedComment.setCreatedAt(likeComment.getComment().getCreated_at());
+            responseLikedComment.setCreated_at(likeComment.getComment().getCreated_at());
             responseLikedCommentList.add(responseLikedComment);
         }
         return responseLikedCommentList;
