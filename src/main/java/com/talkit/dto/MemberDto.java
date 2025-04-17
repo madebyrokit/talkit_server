@@ -29,28 +29,28 @@ public class MemberDto {
     public static class ResponsePostList {
         private Long postId;
         private String title;
-        private String opinionA;
-        private String opinionB;
-        private Date createdAt;
+        private String opinion_a;
+        private String opinion_b;
+        private Date created_at;
     }
     @Data
     public static class ResponseCommentList {
-        private Long commentId;
+        private Long comment_id;
         private String content;
         private String opinion;
-        private Date createdAt;
+        private Date created_at;
     }
 
     @Data
     public static class ResponseLikedPostList {
-        private Long postId;
+        private Long post_id;
         private String title;
-        private Date createdAt;
+        private Date created_at;
     }
     @Data
     public static class ResponseLikedCommentList {
-        private Long commentId;
+        private Long comment_id;
         private String content;
-        private Date createdAt;
+        private Date created_at;
     }
 }
