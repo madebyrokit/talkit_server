@@ -47,7 +47,7 @@ public class SecurityConfig {
 
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://ec2-43-200-178-68.ap-northeast-2.compute.amazonaws.com", "http://localhost:3000", "http://192.168.31.125:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://192.168.31.21:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
         configuration.addExposedHeader("Authorization");
