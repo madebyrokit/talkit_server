@@ -26,7 +26,6 @@ public class WebSocketController {
 
 
     @EventListener
-    @SendTo("/topic/join")
     public ResponseEntity<WebSocketDto.Join> handleWebSocketConnectListener(SessionConnectEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = stompHeaderAccessor.getSessionId();
