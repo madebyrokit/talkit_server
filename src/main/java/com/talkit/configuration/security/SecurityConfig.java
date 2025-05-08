@@ -29,11 +29,13 @@ public class SecurityConfig {
 
         httpSecurity.cors(
                 (cors)
-                        -> cors.configurationSource(corsConfigurationSource())
+                        -> cors
+                        .configurationSource( corsConfigurationSource() )
         );
 
-        httpSecurity.authorizeHttpRequests((author) ->
-                        author
+        httpSecurity.authorizeHttpRequests(
+                (author)
+                        -> author
                 .requestMatchers(HttpMethod.GET, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/**").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/**").permitAll()
