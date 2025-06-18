@@ -1,7 +1,6 @@
 package com.talkit.dto;
 
 import lombok.*;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.Date;
 

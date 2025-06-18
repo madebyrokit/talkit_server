@@ -30,12 +30,9 @@ dependencies {
 	//JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-	//Swager
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-
 	//Database
-	implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+//	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'org.postgresql:postgresql'
 
 	//QueryDsl
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -56,6 +53,6 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.12.3'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
