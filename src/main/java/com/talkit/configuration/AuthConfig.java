@@ -1,4 +1,4 @@
-package com.talkit.configuration.security;
+package com.talkit.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

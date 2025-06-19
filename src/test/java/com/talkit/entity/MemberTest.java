@@ -1,5 +1,6 @@
 package com.talkit.entity;
 
+import com.talkit.QueryDslConfig;
 import com.talkit.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,13 +8,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 
-@ExtendWith(MockitoExtension.class)
+@Import(QueryDslConfig.class)
+@DataJpaTest
 class MemberTest {
 
-    @Mock
+    @Autowired
+    private TestEntityManager testEntityManager;
+
+    @Autowired
     MemberRepository memberRepository;
 
     @Test
@@ -21,21 +31,18 @@ class MemberTest {
     void createMember() {
         //given
         Member member1 = new Member(
-                "test1@gmail.com",
+                "test1@test.com",
                 "1234",
                 "testUser1",
                 "MBTI",
                 "OAuth");
 
-        Member member2 = new Member(
-                "test2@gmail.com",
-                "1234",
-                "testUser2",
-                "MBTI",
-                "OAuth");
+        testEntityManager.persist(member1);
 
-        //when, then
-        assertThat(member1.getUsername()).isEqualTo("testUser1");
-        assertThat(member2.getUsername()).isEqualTo("testUser2");
+        //when
+        Member found1 = memberRepository.findById(member1.getId()).orElseThrow();
+
+        //then
+        assertEquals("", found1.getEmail(), "test1@test.com");
     }
 }

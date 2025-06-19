@@ -1,4 +1,4 @@
-package com.talkit.configuration.security;
+package com.talkit.configuration;
 
 import com.talkit.configuration.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.talkit.configuration;
+package com.talkit;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class QueryDslConfig {
 
-    @PersistenceContext
     private final EntityManager entityManager;
 
     public QueryDslConfig(EntityManager entityManager) {
