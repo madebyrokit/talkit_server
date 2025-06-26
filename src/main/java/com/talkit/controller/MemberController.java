@@ -55,7 +55,6 @@ public class MemberController {
         return ResponseEntity.ok().body("member is deleted");
     }
 
-    // detail
     @GetMapping("/posts")
     public ResponseEntity<List<MemberDto.ResponsePostList>> getPostListByMember(Authentication authentication) {
         String email = authentication.getName();
