@@ -51,6 +51,9 @@ public class FileServiceImpl implements FileService{
         String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String storeFileName = UUID.randomUUID() + fileExtension;
 
+        multipartFile.transferTo();
+        new File()
+
         try {
             multipartFile.transferTo(new File(filePath+storeFileName));
         } catch (IOException e) {
