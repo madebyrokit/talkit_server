@@ -27,39 +27,40 @@ public class SignServiceImpl implements SignService {
     @Override
     public String login(SignDto.LoginRequest loginRequest) {
         Member member = memberRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.UNAUTHORIZED));
 
         if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
             log.info("{} password error", member.getEmail());
-            throw new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.NOT_FOUND);
+            throw new AppException("아이디 또는 비밀번호가 틀립니다.", HttpStatus.UNAUTHORIZED);
         }
         return jwtProvider.createToken(member.getEmail());
     }
 
     @Override
     public String register(SignDto.SignUpRequest signUpRequest) {
+        validateRegistration(signUpRequest);
 
-        Optional<Member> optionalMember = memberRepository.findByEmail(signUpRequest.getEmail());
-
-        if (optionalMember.isPresent()) {
-            throw new AppException("This member already exists", HttpStatus.NOT_FOUND);
-        } else if (!signUpRequest.getConfirm_password().matches(signUpRequest.getPassword())) {
-            throw new AppException("This passwords do not match", HttpStatus.NOT_FOUND);
-        }
-
-        Member member = new Member(
-                signUpRequest.getEmail(),
-                bCryptPasswordEncoder.encode(signUpRequest.getPassword()),
-                signUpRequest.getUsername(),
-                signUpRequest.getMbti_type(),
-                "default"
-        );
+        Member member = Member.builder()
+                .email(signUpRequest.getEmail())
+                .password(bCryptPasswordEncoder.encode(signUpRequest.getPassword()))
+                .username(signUpRequest.getUsername())
+                .mbtitype(signUpRequest.getMbti_type())
+                .oAuth("default")
+                .build();
 
         member.setAvatar(new Avatar("default.jpg", member));
-
         memberRepository.save(member);
 
-        log.info("{} is registered ", member.getEmail());
+        log.info("{} is registered", member.getEmail());
         return member.getEmail();
+    }
+
+    private void validateRegistration(SignDto.SignUpRequest signUpRequest) {
+        if (memberRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
+            throw new AppException("이미 사용 중인 이메일입니다.", HttpStatus.CONFLICT);
+        }
+        if (!signUpRequest.getPassword().equals(signUpRequest.getConfirm_password())) {
+            throw new AppException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
     }
 }
